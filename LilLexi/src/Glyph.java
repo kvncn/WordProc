@@ -112,7 +112,7 @@ class RectangleGlyph extends Glyph {
 	private int x;
 	private int y;
 	
-	public RectangleGlyph(int size, int x, int y) {
+	public RectangleGlyph(int size, int y, int x) {
 		this.size = size;
 		this.x = x;
 		this.y = y;
