@@ -8,7 +8,7 @@ public class LilLexiControl
 	/**
 	 * LilLexiControl
 	 */
-	public LilLexiControl( LilLexiDoc doc )
+	public LilLexiControl(LilLexiDoc doc)
 	{
 		this.currentDoc = doc;
 	}
@@ -16,10 +16,25 @@ public class LilLexiControl
 	/**
 	 * adds the string to the document
 	 */
-	void add( String c ) 
+	void add(String c) 
 	{	
 		currentDoc.add(c);
 	}	
+	
+	/**
+	 * adds the string to the document
+	 */
+	void add(int size) 
+	{	
+		currentDoc.add(size);
+	}	
+	
+	/*
+	 * Backspace
+	 */
+	void remove() {
+		currentDoc.remove();
+	}
 
 	/**
 	 * quitEditor  user quits
