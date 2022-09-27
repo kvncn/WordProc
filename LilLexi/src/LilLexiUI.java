@@ -109,15 +109,7 @@ public class LilLexiUI
 					string += " ";
 				}
 				
-				//check characters 
-				if(e.keyCode >=97 && e.keyCode <=122)
-				{
-					string += "" + e.character;
-				}
-
-				//check digit
-				if(e.keyCode >=48 && e.keyCode <=57)
-				{
+				if (e.keyCode != SWT.BS) {
 					string += "" + e.character;
 				}
 				

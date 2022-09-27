@@ -39,7 +39,7 @@ public class LilLexiDoc {
 		// always add to latest row
 		this.checkRow();
 		Glyph currRow = glyphs.get(glyphs.size()-1);
-		currRow.insert(new Character(c, currRow.size()* 25, currRow.getRow() * 40));
+		currRow.insert(new Character(c, currRow.size() * 25, currRow.getRow() * 40));
 		ui.updateUI();
 	}
 	
@@ -48,7 +48,7 @@ public class LilLexiDoc {
 		this.checkRow();
 		Glyph currRow = glyphs.get(glyphs.size()-1);
 		// add the rectangle to the row
-		currRow.insert(new RectangleGlyph(20, currRow.size()* 25, currRow.getRow() * 40));
+		currRow.insert(new RectangleGlyph(20, currRow.size() * 25, currRow.getRow() * 40));
 		ui.updateUI();
 	}
 	
