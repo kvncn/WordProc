@@ -67,10 +67,11 @@ public class LilLexiUI
     		int column = 0; int row = 0;
     		for (Glyph g: glyphs)
     		{
-    			e.gc.drawString(g.getChar(), column, row + 10);    
-    			column = (column + 24) % (40*18);
-    			if (column == 0) row += 48;
-    			System.out.println(g.getChar());
+    			g.draw(e);
+//    			e.gc.drawString(g.getChar(), column, row + 10);    
+//    			column = (column + 24) % (40*18);
+//    			if (column == 0) row += 48;
+//    			System.out.println(g.getChar());
     		}
 		});	
 		
@@ -97,7 +98,8 @@ public class LilLexiUI
 				// backspace
 				if(e.keyCode == SWT.BS)
 				{
-					lexiControl.add("BS");	
+					//lexiControl.add("BS");
+					lexiControl.remove();
 					canvas.update();
 					canvas.redraw();
 				}
@@ -153,7 +155,6 @@ public class LilLexiUI
 		/*
         lowerComp.setLayout(new RowLayout());
         statusLabel = new Label(lowerComp, SWT.NONE);		
-
 		FontData[] fD = statusLabel.getFont().getFontData();
 		fD[0].setHeight(24);
 		statusLabel.setFont( new Font(display,fD[0]));
@@ -257,4 +258,3 @@ public class LilLexiUI
 	 */
 	public void setController(LilLexiControl lc) { lexiControl = lc; }
 }
-

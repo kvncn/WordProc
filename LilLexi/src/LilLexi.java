@@ -21,5 +21,3 @@ public class LilLexi
 		lexiUI.start();
 	} 
 }
-
-

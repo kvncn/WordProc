@@ -13,6 +13,10 @@ public class LilLexiControl
 		this.currentDoc = doc;
 	}
 	
+	void remove() {
+		currentDoc.remove();
+	}
+	
 	/**
 	 * adds the string to the document
 	 */
@@ -29,9 +33,3 @@ public class LilLexiControl
 		System.exit(0); 
 	}	
 }
-
-
-
-
-
-

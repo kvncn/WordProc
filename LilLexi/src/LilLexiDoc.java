@@ -11,14 +11,18 @@ import java.util.ArrayList;
 public class LilLexiDoc 
 {
 	private LilLexiUI ui;
+	// says glyphs but really list of rows
 	private List<Glyph> glyphs;
-	
+	private int height;
 	/**
 	 * Ctor
 	 */
 	public LilLexiDoc() 
 	{
+		//width and height of doc
 		glyphs = new ArrayList<Glyph>();
+		//null should be replaced with column? maybe?
+		glyphs.add(new Row(0,0, null));
 	}
 	
 	/**
@@ -27,20 +31,45 @@ public class LilLexiDoc
 	public void setUI(LilLexiUI ui) {this.ui = ui;}
 
 	/**
-	 * add a char to the document (for now just a 
-	 * reg glyph), the plan is to have another 
-	 * add if we want an image or whatever. 
+	 * add a char to the document
 	 */
-	public void add(String c) 
-	{
-		// if we have backspace, pop the last thing off
-		if (c.equals("BS")) {
-			if (glyphs.size() == 0) return;
-			glyphs.remove(glyphs.size()-1);
-		} else {
-			glyphs.add(new Glyph(c));
+	public void add(String c) {
+		//if full, new row
+		if(glyphs.get(glyphs.size()-1).isFull()) {
+			glyphs.add(new Row(0,glyphs.size()+1, null));
 		}
+		Glyph cur = glyphs.get(glyphs.size()-1);
+		//string starts at the width (i.e. before "I was ", "here"
+		//would start at length-1. May need to double check if width
+		//is implemented correctly
+		//y is equal to what? the row number times the constant height?
+		cur.insert(new Character(cur.bounds().width*25, (glyphs.size()-1)*40, cur, c));
 		ui.updateUI();
+	}
+	
+	public void add(int x, int y) {
+		if(glyphs.get(glyphs.size()-1).isFull()) {
+			glyphs.add(new Row(0,glyphs.size()+1, null));
+		}
+		Glyph cur = glyphs.get(glyphs.size()-1);
+		//set width and height standard for right now
+		cur.insert(new GRectangle(cur.bounds().width, (glyphs.size()-1)*5, 10, 5, cur));
+		ui.updateUI();
+	}
+	
+	public void remove() {
+		Glyph cur = glyphs.get(glyphs.size()-1);
+		//if empty first row, stay empty first row
+		if(glyphs.size() == 1 && cur.isEmpty()) {
+			return;
+		//if not first row and is empty, remove row
+		}else if(cur.isEmpty()){ 
+			glyphs.remove(cur);
+		}else {
+			//
+			cur.remove();
+		}
+		
 	}
 	
 	/**
@@ -51,8 +80,3 @@ public class LilLexiDoc
 	 */
 	public List<Glyph> getGlyphs(){return glyphs;}
 }
-
-
-
-
-
