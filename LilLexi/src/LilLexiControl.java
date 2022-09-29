@@ -24,6 +24,10 @@ public class LilLexiControl
 	{	
 		currentDoc.add(c);
 	}	
+	
+	void add(int width, int height) {
+		currentDoc.add(width, height);
+	}
 
 	/**
 	 * quitEditor  user quits

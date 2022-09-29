@@ -47,13 +47,13 @@ public class LilLexiDoc
 		ui.updateUI();
 	}
 	
-	public void add(int x, int y) {
+	public void add(int width, int height) {
 		if(glyphs.get(glyphs.size()-1).isFull()) {
 			glyphs.add(new Row(0,glyphs.size()+1, null));
 		}
 		Glyph cur = glyphs.get(glyphs.size()-1);
 		//set width and height standard for right now
-		cur.insert(new GRectangle(cur.bounds().width, (glyphs.size()-1)*5, 10, 5, cur));
+		cur.insert(new GRectangle(cur.bounds().width, (glyphs.size()-1)*5, width, height, cur));
 		ui.updateUI();
 	}
 	

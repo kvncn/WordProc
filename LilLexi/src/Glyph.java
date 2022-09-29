@@ -122,7 +122,7 @@ class GRectangle extends Glyph{
 
 	@Override
 	public void draw(PaintEvent e) {
-		e.gc.drawRectangle(x, y, width, height);
+		e.gc.drawRectangle(x, y, x+width, y+height);
 	}
 
 	@Override

@@ -133,6 +133,7 @@ public class LilLexiUI
 			}
 		});
         
+        //decorator/embellishment
 		Slider slider = new Slider (canvas, SWT.VERTICAL);
 		Rectangle clientArea = canvas.getClientArea ();
 		slider.setBounds (clientArea.width - 40, clientArea.y + 10, 32, clientArea.height);
@@ -150,16 +151,6 @@ public class LilLexiUI
 			System.out.println ("Scroll detail -> " + string);
 		});
 		
-		// WHY??? Removed this it looks janky and ugly
-        //---- status label
-		/*
-        lowerComp.setLayout(new RowLayout());
-        statusLabel = new Label(lowerComp, SWT.NONE);		
-		FontData[] fD = statusLabel.getFont().getFontData();
-		fD[0].setHeight(24);
-		statusLabel.setFont( new Font(display,fD[0]));
-		statusLabel.setText("Ready to edit!");
-		*/
 		//---- main menu
 		// Purely decorative for now
 		Menu menuBar, fileMenu, insertMenu, helpMenu;
@@ -204,6 +195,15 @@ public class LilLexiUI
 	    	public void widgetDefaultSelected(SelectionEvent event) {
 	    		shell.close();
 	    		display.dispose();
+	    	}
+	    });
+	    
+	    insertRectItem.addSelectionListener(new SelectionListener() {
+	    	public void widgetSelected(SelectionEvent event) {
+	    		lexiControl.add(10, 20);
+	    	}
+	    	public void widgetDefaultSelected(SelectionEvent event) {
+	    		lexiControl.add(10,20);
 	    	}
 	    });
 	    
