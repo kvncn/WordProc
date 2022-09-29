@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.swt.events.PaintEvent;
@@ -13,7 +14,7 @@ import org.eclipse.swt.graphics.Rectangle;
  * really chars because we want backspace functionality 
  * here). Later on make character a subclass
  */
-abstract class Glyph {
+public abstract class Glyph {
 	private int x;
 	private int y;
 	
@@ -21,6 +22,7 @@ abstract class Glyph {
 		return (x == xp && y == yp);
 	}
 	
+	public abstract void set(int x, int y);
 	public abstract void draw(PaintEvent e);
 	
 	public int getRow() {return 0;}
@@ -56,6 +58,8 @@ class Row extends Glyph {
 			g.draw(e);
 		}
 	}
+	
+	public void set(int x, int y) {}
 	
 	public void insert(Glyph g) {
 		glyphList.add(g);
@@ -104,6 +108,11 @@ class Character extends Glyph {
 		e.gc.drawString(c, x, y);
 	}
 	
+	public void set(int x, int y) {
+		this.x = 25 * x;
+		this.y = 40 * y;
+	}
+	
 }
 
 class RectangleGlyph extends Glyph {
@@ -121,5 +130,32 @@ class RectangleGlyph extends Glyph {
 	
 	public void draw(PaintEvent e) {
 		e.gc.drawRectangle(new Rectangle(y, x+5, size, size));
+	}
+	
+	public void set(int x, int y) {
+		this.x = 25 * x;
+		this.y = 40 * y;
+	}
+}
+
+class Cursor extends Glyph {
+	private int idx;
+	private int x;
+	private int y;
+	
+	public Cursor(int idx, int y, int x) {
+		this.idx = idx;
+		this.x = x;
+		this.y = y;
+		
+	}
+	
+	public void draw(PaintEvent e) {
+		e.gc.drawRectangle(new Rectangle(y, x+5, 10, 10));
+	}
+	
+	public void set(int x, int y) {
+		this.y = 25 * x;
+		this.x = 40 * y;
 	}
 }

@@ -114,7 +114,7 @@ public class LilLexiUI
 				}
 				
 				if(!string.equals("")) {
-					System.out.println (string);
+					System.out.println(string);
 					lexiControl.add(string);
 				}
 			}
