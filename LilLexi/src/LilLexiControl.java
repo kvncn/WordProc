@@ -1,5 +1,5 @@
 /**
- * Controller
+ * Controller yay!
  */
 public class LilLexiControl 
 {

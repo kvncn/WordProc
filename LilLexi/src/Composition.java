@@ -1,17 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
-
+// Comment
 public class Composition {
 	
 	private List<Glyph> column;
-	private LilLexiUI ui;
 	
 	public Composition() {
 		column = new ArrayList<Glyph>();
-	}
-	
-	public void setUI(LilLexiUI ui) {
-		this.ui = ui;
 	}
 	
 	public List<Glyph> compose(List<Glyph> glyphs) {
@@ -26,12 +21,14 @@ public class Composition {
 				x = 0;
 				y++;
 				System.out.println("NEW ROW");
-				Glyph newRow = new Row(x, y);
-				g.set(x, y);
+				Glyph newRow = new Row(x, y, null);
+				g.setX(x);
+				g.setY(y);
 				newRow.insert(g);
 				column.add(newRow);
 			} else {
-				g.set(x, y);
+				g.setX(x);
+				g.setY(y);
 				column.get(column.size()-1).insert(g);
 				x++;
 			}
