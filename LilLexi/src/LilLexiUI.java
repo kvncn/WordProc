@@ -236,6 +236,7 @@ public class LilLexiUI
 				Font font = new Font(display, "Courier", 24, SWT.BOLD );
 				
 				
+				
 			}
 	    	
 	    });
