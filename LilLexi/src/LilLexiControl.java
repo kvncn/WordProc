@@ -1,3 +1,4 @@
+
 /**
  * Controller
  */
@@ -8,25 +9,32 @@ public class LilLexiControl
 	/**
 	 * LilLexiControl
 	 */
-	public LilLexiControl( LilLexiDoc doc )
+	public LilLexiControl(LilLexiDoc doc)
 	{
 		this.currentDoc = doc;
-	}
-	
-	void remove() {
-		currentDoc.remove();
 	}
 	
 	/**
 	 * adds the string to the document
 	 */
-	void add( String c ) 
+	void add(String c) 
 	{	
 		currentDoc.add(c);
 	}	
 	
-	void add(int width, int height) {
-		currentDoc.add(width, height);
+	/**
+	 * adds the string to the document
+	 */
+	void add(int size) 
+	{	
+		currentDoc.add(size);
+	}	
+	
+	/*
+	 * Backspace
+	 */
+	void remove() {
+		currentDoc.remove();
 	}
 
 	/**
