@@ -129,7 +129,7 @@ class RectangleGlyph extends Glyph {
 	}
 	
 	public void draw(PaintEvent e) {
-		e.gc.drawRectangle(new Rectangle(y, x+5, size, size));
+		e.gc.drawRectangle(new Rectangle(x, y, size, size));
 	}
 	
 	public void set(int x, int y) {
