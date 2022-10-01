@@ -3,6 +3,7 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
@@ -115,6 +116,9 @@ class Character extends Glyph{
 
 		//System.out.println("char coordinates are " + x +"," +y*height);
 		//c + 8 for buffer
+		
+		Font newFont = new Font(e.display, font, fontSize, SWT.BOLD );
+		e.gc.setFont(newFont);
 		e.gc.drawString(c, x +8, y * (maxHeight+1));	
 	}	
 	

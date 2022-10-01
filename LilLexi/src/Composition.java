@@ -18,14 +18,12 @@ public class Composition {
 		column = new ArrayList<Glyph>();
 		for (Glyph g : glyphs) {
 			rowWidth += g.bounds().width;
-			//System.out.println("row width is" + rowWidth);
 			if (x == -1 || rowWidth > maxWidth) {
 				x = 0;
 				rowWidth = g.bounds().width;
 				y++;
-				//System.out.println("NEW ROW");
 				Glyph newRow = new Row(x, y);
-				//g.setX(x);
+				
 				g.setY(y);
 				newRow.insert(g);
 				column.add(newRow);

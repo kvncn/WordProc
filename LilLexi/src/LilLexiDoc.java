@@ -10,6 +10,8 @@ class LilLexiDoc extends Compositor {
 	private List<Glyph> glyphs;
 	private Composition composition;
 	private List<Glyph> comp;
+	private String currentFont;
+	private int currentSize;
 	
 	/**
 	 * Ctor
@@ -22,6 +24,8 @@ class LilLexiDoc extends Compositor {
 		glyphs.add(new Cursor(0, 0));
 		composition = new Composition();
 		comp = composition.compose(glyphs);
+		currentFont = "Courier";
+		currentSize = 24;
 	}
 	
 	
@@ -39,10 +43,31 @@ class LilLexiDoc extends Compositor {
 		// always add to latest row
 		//default is courier 24 so default will always be x*25, and y *40
 		glyphs.add(cursor, new Character(cursor * 25, cursor * 40, c));
+		Character cur = (Character) glyphs.get(glyphs.size()-2);
+		cur.changeFont(currentFont);
+		cur.changeSize(currentSize);
 		cursor++;
 		//glyphs.add(cursor, new Cursor(cursor, cursor, cursor));
 		comp = composition.compose(glyphs);
 		ui.updateUI();
+	}
+	
+	public void changeFont(String font) {
+		for(Glyph g : glyphs) {
+			if(g instanceof Character) {
+				((Character) g).changeFont(font);
+			}
+		}
+		currentFont = font;
+	}
+	
+	public void changeFontSize(int size) {
+		for(Glyph g : glyphs) {
+			if(g instanceof Character) {
+				((Character) g).changeSize(size);;
+			}
+		}
+		currentSize = size;
 	}
 	
 	public void add(int rectSize) {

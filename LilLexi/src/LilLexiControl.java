@@ -20,7 +20,15 @@ public class LilLexiControl
 	void add(String c) 
 	{	
 		currentDoc.add(c);
-	}	
+	}
+	
+	void changeFont(String font) {
+		currentDoc.changeFont(font);
+	}
+	
+	void changeFontSize(int size) {
+		currentDoc.changeFontSize(size);
+	}
 	
 	/**
 	 * adds the string to the document

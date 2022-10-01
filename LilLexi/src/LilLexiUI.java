@@ -227,16 +227,28 @@ public class LilLexiUI
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
+				lexiControl.changeFont("Courier");
 				
 			}
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				// TODO Auto-generated method stub
-				Font font = new Font(display, "Courier", 24, SWT.BOLD );
+				lexiControl.changeFont("Courier");
+			}
+	    	
+	    });
+	    
+	    fontFixedItem.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				lexiControl.changeFont("Fixed");
 				
-				
-				
+			}
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				lexiControl.changeFont("Fixed");
 			}
 	    	
 	    });
@@ -244,11 +256,12 @@ public class LilLexiUI
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
+				lexiControl.changeFontSize(20);
 				
 			}
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				lexiControl.changeFontSize(20);
 				// TODO Auto-generated method stub
 				
 			}
@@ -260,12 +273,13 @@ public class LilLexiUI
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 				// TODO Auto-generated method stub
+				lexiControl.changeFontSize(24);
 				
 			}
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				// TODO Auto-generated method stub
-				
+				lexiControl.changeFontSize(24);
 			}
 	    	
 	    });
