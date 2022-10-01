@@ -44,7 +44,7 @@ public class LilLexiControl
 	void remove() {
 		currentDoc.remove();
 	}
-
+	
 	/**
 	 * quitEditor  user quits
 	 */

@@ -43,7 +43,7 @@ class LilLexiDoc extends Composition {
 		// always add to latest row
 		//default is courier 24 so default will always be x*25, and y *40
 		glyphs.add(cursor, new Character(cursor * 25, cursor * 40, c));
-		Character cur = (Character) glyphs.get(glyphs.size()-2);
+		Character cur = (Character) glyphs.get(cursor);
 		cur.changeFont(currentFont);
 		cur.changeSize(currentSize);
 		cursor++;

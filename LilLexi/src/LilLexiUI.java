@@ -105,6 +105,7 @@ public class LilLexiUI
 					string += "" + e.keyCode;
 				}
 				*/
+				
 				if (e.keyCode == SWT.SPACE) {
 					string += " ";
 				}
@@ -114,7 +115,7 @@ public class LilLexiUI
 				}
 				
 				if(!string.equals("")) {
-					System.out.println(string);
+					System.out.println("ADDING!!!!");
 					lexiControl.add(string);
 				}
 			}
@@ -197,109 +198,24 @@ public class LilLexiUI
 	    helpGetHelpItem.setText("Get Help");
 	    
 	    //font listeners
-	    fontCourierItem.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				lexiControl.changeFont("Courier");
-				
-			}
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
-				lexiControl.changeFont("Courier");
-			}
-	    	
-	    });
+	    fontCourierItem.addSelectionListener(new FontChanger("Courier", lexiControl));
 	    
-	    fontFixedItem.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				lexiControl.changeFont("Fixed");
-				
-			}
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
-				lexiControl.changeFont("Fixed");
-			}
-	    	
-	    });
-	    fontSize14Item.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				lexiControl.changeFontSize(14);
-				
-			}
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				lexiControl.changeFontSize(14);
-				// TODO Auto-generated method stub
-				
-			}
-	    	
-	    });
+	    fontFixedItem.addSelectionListener(new FontChanger("Fixed", lexiControl));
 	    
-	    fontSize24Item.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
-				lexiControl.changeFontSize(24);
-				
-			}
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
-				lexiControl.changeFontSize(24);
-			}
-	    	
-	    });
+	    fontSize14Item.addSelectionListener(new SizeChanger(14, lexiControl));
+	    
+	    fontSize14Item.addSelectionListener(new SizeChanger(24, lexiControl));
 	    
 	    // Closes the file
-	    fileExitItem.addSelectionListener(new SelectionListener() {
-	    	public void widgetSelected(SelectionEvent event) {
-	    		shell.close();
-	    		display.dispose();
-	    	}
-	    	public void widgetDefaultSelected(SelectionEvent event) {
-	    		shell.close();
-	    		display.dispose();
-	    	}
-	    });
+	    fileExitItem.addSelectionListener(new ExitCommand(shell, display, lexiControl));
 	    
 	    // Adds a rectangle to the lexi file
-	    insertRectItem.addSelectionListener(new SelectionListener() {
-	    	public void widgetSelected(SelectionEvent event) {
-	    		lexiControl.add(50);
-	    	}
-	    	public void widgetDefaultSelected(SelectionEvent event) {
-	    		lexiControl.add(20);
-	    	}
-	    });
+	    insertRectItem.addSelectionListener(new RectCommand(50, lexiControl));
 	    
 	    // Adds an image to the lexi file
-	    insertImageItem.addSelectionListener(new SelectionListener() {
-	    	public void widgetSelected(SelectionEvent event) {
-	    		lexiControl.add(20);
-	    	}
-	    	public void widgetDefaultSelected(SelectionEvent event) {
-	    		lexiControl.add(20);
-	    	}
-	    });
-	    
-	    // Adds a rectangle to the lexi file
-	    insertImageItem.addSelectionListener(new SelectionListener() {
-	    	public void widgetSelected(SelectionEvent event) {
-	    		lexiControl.add(20);
-	    	}
-	    	public void widgetDefaultSelected(SelectionEvent event) {
-	    		lexiControl.add(20);
-	    	}
-	    });
-	    
+	    insertImageItem.addSelectionListener(new ImageCommand(50, lexiControl));
+
+	    /*
 	    // Do we just remove this? we don't want to save the file that's
 	    // not required for this assignment
 	    fileSaveItem.addSelectionListener(new SelectionListener() {
@@ -314,7 +230,7 @@ public class LilLexiUI
 	    	}
 	    	public void widgetDefaultSelected(SelectionEvent event) {
 	    	}	    		
-	    });	
+	    });	*/
 	    
         //Menu systemMenu = Display.getDefault().getSystemMenu();
         MenuItem[] mi = menuBar.getItems();
