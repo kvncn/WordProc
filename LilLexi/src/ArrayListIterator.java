@@ -5,7 +5,7 @@ public class ArrayListIterator extends Iterator {
 	public void First() {
 		// TODO Auto-generated method stub
 		
-	}
+	}//df
 
 	@Override
 	public void Next() {
