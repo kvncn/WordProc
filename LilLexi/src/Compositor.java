@@ -10,6 +10,7 @@ public class Compositor {
 	}
 	
 	public List<Glyph> compose(List<Glyph> glyphs) {
+		System.out.println(glyphs);
 		int x = -1;
 		int y = -1;
 		int maxWidth = 700;

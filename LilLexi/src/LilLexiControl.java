@@ -44,7 +44,11 @@ public class LilLexiControl
 	void remove() {
 		currentDoc.remove();
 	}
-
+	
+	void undo() {
+		currentDoc.undo();
+	}
+	
 	/**
 	 * quitEditor  user quits
 	 */

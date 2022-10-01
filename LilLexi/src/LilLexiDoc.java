@@ -1,15 +1,6 @@
-import java.util.ArrayList;
-import java.util.List;
-
-import java.util.ArrayList;
 import java.util.List;
 
 class LilLexiDoc extends Composition {
-	private LilLexiUI ui;
-	private int cursor;
-	private List<Glyph> glyphs;
-	private Compositor compositor;
-	private List<Glyph> comp;
 	private String currentFont;
 	private int currentSize;
 	
@@ -17,13 +8,9 @@ class LilLexiDoc extends Composition {
 	 * Ctor
 	 */
 	public LilLexiDoc() {
+		super();
 		// this is just going to be our list of rows for now
 		// cause we only have one column
-		glyphs = new ArrayList<Glyph>(); // if we want more columns, we can work it out here
-		cursor = 0;
-		glyphs.add(new Cursor(0, 0));
-		compositor = new Compositor();
-		comp = compositor.compose(glyphs);
 		currentFont = "Courier";
 		currentSize = 24;
 	}
@@ -43,7 +30,7 @@ class LilLexiDoc extends Composition {
 		// always add to latest row
 		//default is courier 24 so default will always be x*25, and y *40
 		glyphs.add(cursor, new Character(cursor * 25, cursor * 40, c));
-		Character cur = (Character) glyphs.get(glyphs.size()-2);
+		Character cur = (Character) glyphs.get(cursor);
 		cur.changeFont(currentFont);
 		cur.changeSize(currentSize);
 		cursor++;
@@ -59,6 +46,7 @@ class LilLexiDoc extends Composition {
 			}
 		}
 		currentFont = font;
+		ui.updateUI();
 	}
 	
 	public void changeFontSize(int size) {
@@ -68,6 +56,7 @@ class LilLexiDoc extends Composition {
 			}
 		}
 		currentSize = size;
+		ui.updateUI();
 	}
 	
 	public void add(int rectSize) {
@@ -105,6 +94,13 @@ class LilLexiDoc extends Composition {
 		}
 	}
 	
+	// For some reason history not workinbg
+	public void undo() {
+		if (glyphs.size() == 1) {
+			return;
+		}
+		this.remove();
+	}	
 	/**
 	 * gets glyphs list (this is kinda like the document itself
 	 * we can iterate, build strings until we hit a space, then 
