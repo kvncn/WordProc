@@ -27,7 +27,6 @@ class LilLexiDoc extends Composition {
 	 * add if we want an image or whatever. 
 	 */
 	public void add(String c) {
-		history.addFirst(glyphs);
 		// always add to latest row
 		//default is courier 24 so default will always be x*25, and y *40
 		glyphs.add(cursor, new Character(cursor * 25, cursor * 40, c));
@@ -61,7 +60,6 @@ class LilLexiDoc extends Composition {
 	}
 	
 	public void add(int rectSize) {
-		history.addFirst(glyphs);
 		//default is courier 24 so default will always be x*25, and y *40
 		glyphs.add(cursor, new GRectangle(cursor * 25, cursor * 40, rectSize, rectSize));
 		cursor++;
@@ -82,7 +80,6 @@ class LilLexiDoc extends Composition {
 	 * For backspace, remove last glyph from document
 	 */
 	public void remove() {
-		history.addFirst(glyphs);
 		// only cursor
 		if (cursor == 0) {
 			return;
@@ -97,7 +94,7 @@ class LilLexiDoc extends Composition {
 		}
 	}
 	
-	// For some reason history not working ??
+	// For some reason history not workinbg
 	public void undo() {
 		if (glyphs.size() == 1) {
 			return;
