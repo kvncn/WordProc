@@ -170,7 +170,7 @@ public class LilLexiUI
 		Menu menuBar, fileMenu, insertMenu, fontMenu, helpMenu;
 		MenuItem fileMenuHeader, insertMenuHeader, fontMenuHeader, helpMenuHeader, fileExitItem, fileSaveItem, helpGetHelpItem;
 		MenuItem insertImageItem, insertRectItem;
-		MenuItem fontSize20Item, fontSize24Item, fontCourierItem, fontFixedItem;
+		MenuItem fontSize14Item, fontSize24Item, fontCourierItem, fontFixedItem;
 
 		menuBar = new Menu(shell, SWT.BAR);
 		
@@ -202,8 +202,8 @@ public class LilLexiUI
 		fontCourierItem.setText("Font: Courier");
 		fontFixedItem = new MenuItem(fontMenu, SWT.PUSH);
 		fontFixedItem.setText("Font: Fixed");
-		fontSize20Item = new MenuItem(fontMenu, SWT.PUSH);
-		fontSize20Item.setText("Font Size: 20");
+		fontSize14Item = new MenuItem(fontMenu, SWT.PUSH);
+		fontSize14Item.setText("Font Size: 14");
 		fontSize24Item = new MenuItem(fontMenu, SWT.PUSH);
 		fontSize24Item.setText("Font Size: 24");
 		
@@ -252,16 +252,16 @@ public class LilLexiUI
 			}
 	    	
 	    });
-	    fontSize20Item.addSelectionListener(new SelectionListener() {
+	    fontSize14Item.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
-				lexiControl.changeFontSize(20);
+				lexiControl.changeFontSize(14);
 				
 			}
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				lexiControl.changeFontSize(20);
+				lexiControl.changeFontSize(14);
 				// TODO Auto-generated method stub
 				
 			}

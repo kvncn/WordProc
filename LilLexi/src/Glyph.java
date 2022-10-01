@@ -60,6 +60,8 @@ public abstract class Glyph{
 		this.width = width;
 	}
 	
+	public abstract void checkMe(SpellingCheckingVistor checker);
+	
 	//hit detection
 	//need to override for rect
 	public boolean intersects(int test_x, int test_y) {
@@ -113,13 +115,10 @@ class Character extends Glyph{
 
 	@Override
 	public void draw(PaintEvent e) {
-
-		//System.out.println("char coordinates are " + x +"," +y*height);
-		//c + 8 for buffer
 		
 		Font newFont = new Font(e.display, font, fontSize, SWT.BOLD );
 		e.gc.setFont(newFont);
-		e.gc.drawString(c, x +8, y * (maxHeight+1));	
+		e.gc.drawString(c, x +10, y * (maxHeight+1));	
 	}	
 	
 	public void changeFont(String font) {
@@ -148,7 +147,7 @@ class Character extends Glyph{
 	@Override
 	public Rectangle bounds() {
 		//length = amount of char times width of each char
-		return new Rectangle(x, y, c.length()*width, height);
+		return new Rectangle(x, y, width, height);
 	}
 	
 	//TODO: FIND ACTUAL "HEIGHT" OF COURIER
@@ -157,6 +156,13 @@ class Character extends Glyph{
 			return 10;
 		}
 		return 10;
+	}
+
+	@Override
+	public void checkMe(SpellingCheckingVistor checker) {
+		
+		checker.visitCharacter(this);
+		
 	}
 	
 }
@@ -182,6 +188,11 @@ class GRectangle extends Glyph{
 	@Override
 	public boolean intersects(int test_x, int test_y) {
 		return (x<=test_x && test_x<= x+width) && (y<=test_y && test_y<= x+height);
+	}
+
+	@Override
+	public void checkMe(SpellingCheckingVistor checker) {
+		checker.vistRectangle(this);
 	}
 	
 
@@ -239,6 +250,13 @@ class Cursor extends Glyph{
 	@Override
 	public boolean intersects(int test_x, int test_y) {
 		return (x<=test_x && test_x<= x+5) && (y<=test_y && test_y<= x+5);
+	}
+
+	@Override
+	public void checkMe(SpellingCheckingVistor checker) {
+		// TODO Auto-generated method stub
+		checker.vistCursor(this);
+		
 	}
 
 }
@@ -328,8 +346,6 @@ class Row extends Glyph{
 		return children.get(i);
 	}
 	
-	
-	
 	public boolean isEmpty() {
 		return children.size() == 0;
 	}
@@ -348,5 +364,11 @@ class Row extends Glyph{
 	}
 	public int getLastWidth() {
 		return children.get(children.size()-1).bounds().width;
+	}
+
+	@Override
+	public void checkMe(SpellingCheckingVistor checker) {
+		checker.vistRow(this);
+		
 	}
 }
