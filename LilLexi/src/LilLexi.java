@@ -1,5 +1,13 @@
+
+
 /**
  * Lil Lexi Document Editor
+ * 
+ */
+
+
+/**
+ * Lil Lexi Document Editor main
  * 
  */
 
@@ -21,5 +29,3 @@ public class LilLexi
 		lexiUI.start();
 	} 
 }
-
-

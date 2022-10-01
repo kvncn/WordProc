@@ -1,25 +1,33 @@
-/**
- * Lil Lexi Document Model
- * 
- */
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * LilLexiDoc
- */
-public class LilLexiDoc 
-{
+import java.util.ArrayList;
+import java.util.List;
+
+class LilLexiDoc extends Composition {
 	private LilLexiUI ui;
+	private int cursor;
 	private List<Glyph> glyphs;
+	private Compositor compositor;
+	private List<Glyph> comp;
+	private String currentFont;
+	private int currentSize;
 	
 	/**
 	 * Ctor
 	 */
-	public LilLexiDoc() 
-	{
-		glyphs = new ArrayList<Glyph>();
+	public LilLexiDoc() {
+		// this is just going to be our list of rows for now
+		// cause we only have one column
+		glyphs = new ArrayList<Glyph>(); // if we want more columns, we can work it out here
+		cursor = 0;
+		glyphs.add(new Cursor(0, 0));
+		compositor = new Compositor();
+		comp = compositor.compose(glyphs);
+		currentFont = "Courier";
+		currentSize = 24;
 	}
+	
 	
 	/**
 	 * setUI
@@ -31,16 +39,70 @@ public class LilLexiDoc
 	 * reg glyph), the plan is to have another 
 	 * add if we want an image or whatever. 
 	 */
-	public void add(String c) 
-	{
-		// if we have backspace, pop the last thing off
-		if (c.equals("BS")) {
-			if (glyphs.size() == 0) return;
-			glyphs.remove(glyphs.size()-1);
-		} else {
-			glyphs.add(new Glyph(c));
-		}
+	public void add(String c) {
+		// always add to latest row
+		//default is courier 24 so default will always be x*25, and y *40
+		glyphs.add(cursor, new Character(cursor * 25, cursor * 40, c));
+		Character cur = (Character) glyphs.get(glyphs.size()-2);
+		cur.changeFont(currentFont);
+		cur.changeSize(currentSize);
+		cursor++;
+		//glyphs.add(cursor, new Cursor(cursor, cursor, cursor));
+		comp = compositor.compose(glyphs);
 		ui.updateUI();
+	}
+	
+	public void changeFont(String font) {
+		for(Glyph g : glyphs) {
+			if(g instanceof Character) {
+				((Character) g).changeFont(font);
+			}
+		}
+		currentFont = font;
+	}
+	
+	public void changeFontSize(int size) {
+		for(Glyph g : glyphs) {
+			if(g instanceof Character) {
+				((Character) g).changeSize(size);;
+			}
+		}
+		currentSize = size;
+	}
+	
+	public void add(int rectSize) {
+		//default is courier 24 so default will always be x*25, and y *40
+		glyphs.add(cursor, new GRectangle(cursor * 25, cursor * 40, rectSize, rectSize));
+		cursor++;
+		//glyphs.add(cursor, new Cursor(cursor, cursor, cursor));
+		comp = compositor.compose(glyphs);
+		ui.updateUI();
+	}
+	
+//	public void add() {
+//		glyphs.add(cursor, new Image(cursor * 25, cursor * 40));
+//		cursor++;
+//		//glyphs.add(cursor, new Cursor(cursor, cursor, cursor));
+//		comp = composition.compose(glyphs);
+//		ui.updateUI();
+//	}
+	
+	/* 
+	 * For backspace, remove last glyph from document
+	 */
+	public void remove() {
+		// only cursor
+		if (cursor == 0) {
+			return;
+		}
+		else {
+			// removes what came before cursor!
+			glyphs.remove(cursor-1);
+			cursor--;
+			//glyphs.add(cursor, new Cursor(cursor, cursor * 25, cursor * 40));
+			comp = compositor.compose(glyphs);
+			ui.updateUI();
+		}
 	}
 	
 	/**
@@ -49,10 +111,5 @@ public class LilLexiDoc
 	 * just add a marker to each string ("s!") for example, that 
 	 * will allows us to display wrongly spelled words differently
 	 */
-	public List<Glyph> getGlyphs(){return glyphs;}
+	public List<Glyph> getGlyphs(){return comp;}
 }
-
-
-
-
-
