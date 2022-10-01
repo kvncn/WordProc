@@ -71,6 +71,7 @@ public class LilLexiUI
     		}
 		});	
 		
+		/*
         canvas.addMouseListener(new MouseListener() {
             public void mouseDown(MouseEvent e) {
             	System.out.println("mouseDown in canvas");
@@ -78,7 +79,7 @@ public class LilLexiUI
             public void mouseUp(MouseEvent e) {} 
             public void mouseDoubleClick(MouseEvent e) {} 
         });
-        
+        */
         // This gets the character from keyboard
         canvas.addKeyListener(new KeyAdapter()
 		{	
@@ -144,6 +145,7 @@ public class LilLexiUI
 		//---- main menu
 		Menu menuBar, fileMenu, insertMenu, fontMenu, helpMenu;
 		MenuItem fileMenuHeader, insertMenuHeader, fontMenuHeader, helpMenuHeader, fileExitItem, fileSaveItem, helpGetHelpItem;
+		MenuItem fileUndoItem;
 		MenuItem insertImageItem, insertRectItem;
 		MenuItem fontSize14Item, fontSize24Item, fontCourierItem, fontFixedItem;
 
@@ -160,6 +162,8 @@ public class LilLexiUI
 	    fileSaveItem.setText("Save");
 	    fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 	    fileExitItem.setText("Exit");
+	    fileUndoItem = new MenuItem(fileMenu, SWT.PUSH);
+	    fileUndoItem.setText("Undo");
 	    
 	    // Working
 		insertMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
@@ -214,6 +218,8 @@ public class LilLexiUI
 	    
 	    // Adds an image to the lexi file
 	    insertImageItem.addSelectionListener(new ImageCommand(50, lexiControl));
+	    
+	    fileUndoItem.addSelectionListener(new UndoCommand(lexiControl));
 
 	    /*
 	    // Do we just remove this? we don't want to save the file that's

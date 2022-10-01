@@ -116,3 +116,17 @@ class ImageCommand extends Command {
 		lexiControl.add(size);
 	}
 }
+
+class UndoCommand extends Command {
+	public UndoCommand(LilLexiControl control) {
+		super(control);
+	}
+	
+	public void widgetSelected(SelectionEvent event) {
+		lexiControl.undo();
+	}
+	
+	public void widgetDefaultSelected(SelectionEvent event) {
+		lexiControl.undo();
+	}
+}
