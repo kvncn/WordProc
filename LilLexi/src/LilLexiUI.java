@@ -48,7 +48,7 @@ public class LilLexiUI
 	    //Composite lowerComp = new Composite(shell, SWT.NO_FOCUS);
 	    
 	    //---- canvas for the document
-		canvas = new Canvas(upperComp, SWT.NONE);
+		canvas = new Canvas(upperComp, SWT.V_SCROLL);
 		canvas.setSize(800,800);
 		
 		
@@ -106,32 +106,31 @@ public class LilLexiUI
 				}
 			}
 		});
-        
+        Point origin = new Point(0,0);
         // This is a decorator/embellishment
-		Slider slider = new Slider(canvas, SWT.VERTICAL);
-		Rectangle clientArea = canvas.getClientArea();
-		slider.setBounds (clientArea.width - 40, clientArea.y + 10, 32, clientArea.height);
-		slider.setMinimum(0);
-		slider.setMaximum(clientArea.y);
-		slider.addListener (SWT.Selection, event -> {
-			String string = "SWT.NONE";
-			switch (event.detail) {
-				case SWT.DRAG: 
-					{
-						string = "SWT.DRAG"; 
-						break;
-					}
-				case SWT.HOME: string = "SWT.HOME"; break;
-				case SWT.END: string = "SWT.END"; break;
-				case SWT.ARROW_DOWN: string = "SWT.ARROW_DOWN"; break;
-				case SWT.ARROW_UP: string = "SWT.ARROW_UP"; break;
-				case SWT.PAGE_DOWN: string = "SWT.PAGE_DOWN"; break;
-				case SWT.PAGE_UP: string = "SWT.PAGE_UP"; break;
-			}
-			System.out.println ("Scroll detail -> " + string);
-		});
-		slider.setIncrement(10);
-		
+        ScrollBar vBar = canvas.getVerticalBar();
+        vBar.addListener(SWT.Selection, e -> {
+        	int vSelection = vBar.getSelection ();
+    		int destY = -vSelection - origin.y;
+    		canvas.scroll (0, destY, 0, 0, 800, 800, false);
+    		origin.y = -vSelection;
+        });
+        
+        canvas.addListener (SWT.Resize,  e -> {
+    		Rectangle rect = canvas.getClientArea();
+    		Rectangle client = canvas.getClientArea();
+  
+    		vBar.setMaximum (rect.height);
+    		vBar.setThumb (Math.min (rect.height, client.height));
+    		int vPage = rect.height - client.height;
+    		int vSelection = vBar.getSelection ();
+    
+    		if (vSelection >= vPage) {
+    			if (vPage <= 0) vSelection = 0;
+    			origin.y = -vSelection;
+    		}
+    		canvas.redraw ();
+    	});
 		
 		// These will follow the command structure/pattern, they seem apt candidates for this
 		//---- main menu
