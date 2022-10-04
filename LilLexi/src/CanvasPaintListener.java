@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * repaints the canvas
+ * repaints the canvas with redraw
  * 
  */
 public class CanvasPaintListener implements PaintListener 

@@ -23,6 +23,10 @@ public class LilLexiControl
 		currentDoc.add(c);
 	}
 	
+	/**
+	 *
+	 * @param font
+	 */
 	void changeFont(String font) {
 		currentDoc.changeFont(font);
 	}

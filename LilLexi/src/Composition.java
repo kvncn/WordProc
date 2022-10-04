@@ -16,7 +16,7 @@ public abstract class Composition {
 	
 	public Composition() {
 		// this is just going to be our list of rows for now
-		// cause we only have one column
+		// cause we only have one column now
 		glyphs = new ArrayList<Glyph>(); // if we want more columns, we can work it out here
 		cursor = 0;
 		glyphs.add(new Cursor(0, 0));
