@@ -34,6 +34,8 @@ public abstract class Composition {
 	
 	public abstract void undo();
 	
+	public abstract void redo();
+	
 	public abstract List<Glyph> getGlyphs();
 }
 

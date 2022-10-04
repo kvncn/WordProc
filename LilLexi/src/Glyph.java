@@ -4,7 +4,9 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 
@@ -136,7 +138,7 @@ class Character extends Glyph{
 	
 	
 	public void changeSize(int size) {
-		if(size == 20) {
+		if(size == 14) {
 			fontSize = 20;
 		}
 		if(size == 24) {
@@ -198,33 +200,41 @@ class GRectangle extends Glyph{
 
 }
 
-//class Image extends Glyph{
-//	protected int width;
-//	protected int height;
-//	public Image(int x, int y) {
-//		super(x,y);
-//		this.width = width;
-//		this.height = height;
-//	}
-//
-//	@Override
-//	public void draw(PaintEvent e) {
-//		e.gc.drawRectangle(x*25, y*40, width, height);
-//		
-//		
-//	}
-//
-//	@Override
-//	public Rectangle bounds() {
-//		return new Rectangle(x,y, width, height);
-//	}
-//	
-//	@Override
-//	public boolean intersects(int test_x, int test_y) {
-//		return (x<=test_x && test_x<= x+width) && (y<=test_y && test_y<= x+height);
-//	}
-//
-//}
+class GImage extends Glyph {
+	protected int width;
+	protected int height;
+	protected Display display;
+	protected Image img;
+	
+	public GImage(int x, int y, Display disp) {
+		super(x,y);
+		width = 100;
+		height = 100;
+		display = disp;
+		img = new Image(display, "duck.jpg");
+	}
+
+	@Override
+	public void draw(PaintEvent e) {
+		e.gc.drawImage(img, x, y);
+	}
+
+	@Override
+	public Rectangle bounds() {
+		return new Rectangle(x,y, width, height);
+	}
+	
+	@Override
+	public boolean intersects(int test_x, int test_y) {
+		return (x<=test_x && test_x<= x+width) && (y<=test_y && test_y<= x+height);
+	}
+
+	@Override
+	public void checkMe(SpellingCheckingVisitor checker) {
+		// TODO Auto-generated method stub
+		return;
+	}
+}
 
 
 class Cursor extends Glyph{
