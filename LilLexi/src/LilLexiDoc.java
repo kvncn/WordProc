@@ -40,6 +40,7 @@ class LilLexiDoc extends Composition {
 		glyphs.add(cursor, charac);
 		last = charac;
 		Character cur = (Character) glyphs.get(cursor);
+		cur.checkMe(spellCheck);
 		cur.changeFont(currentFont);
 		cur.changeSize(currentSize);
 		cursor++;
@@ -63,7 +64,7 @@ class LilLexiDoc extends Composition {
 	public void changeFontSize(int size) {
 		for(Glyph g : glyphs) {
 			if(g instanceof Character) {
-				((Character) g).changeSize(size);
+				((Character) g).changeSize(size);;
 			}
 		}
 		currentSize = size;
