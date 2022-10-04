@@ -13,6 +13,7 @@ public abstract class Composition {
 	protected Compositor compositor;
 	protected LilLexiUI ui;
 	protected List<Glyph> comp;
+	protected SpellingCheckingVisitor spellCheck;
 	
 	public Composition() {
 		// this is just going to be our list of rows for now
@@ -22,6 +23,7 @@ public abstract class Composition {
 		glyphs.add(new Cursor(0, 0));
 		compositor = new Compositor();
 		comp = compositor.compose(glyphs);
+		spellCheck = new SpellingCheckingVisitor();
 	}
 	
 	public abstract void setUI(LilLexiUI ui);
