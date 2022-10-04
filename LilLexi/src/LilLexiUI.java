@@ -51,25 +51,10 @@ public class LilLexiUI
 		canvas = new Canvas(upperComp, SWT.NONE);
 		canvas.setSize(800,800);
 		
+		
 		// This is likely involved with the compositor/strategy pattern
 		// canvas paint listener, repaints canvas after redraw called
-		canvas.addPaintListener(e -> {
-			System.out.println("PaintListener");
-			Rectangle rect = shell.getClientArea();
-			e.gc.setBackground(display.getSystemColor(SWT.COLOR_WHITE)); 
-            e.gc.fillRectangle(rect.x, rect.y, rect.width, rect.height);
-            e.gc.setForeground(display.getSystemColor(SWT.COLOR_BLUE)); 
-            // might want to change this and just pass a font? use the e.setFont thingie in a command
-    		Font font = new Font(display, "Courier", 24, SWT.BOLD );
-    		e.gc.setFont(font);
-    		
-    		List<Glyph> glyphs = currentDoc.getGlyphs();
-    		for (Glyph g: glyphs)
-    		{
-    			// Only need to call the draw method from a glyph, worry not about which type of glyph it is!
-    			g.draw(e);   // Damn bro nice encapsulation and polymorphism, love to see it
-    		}
-		});	
+		canvas.addPaintListener(new CanvasPaintListener(shell, display, currentDoc));	
 		
 		/*
         canvas.addMouseListener(new MouseListener() {
@@ -123,13 +108,19 @@ public class LilLexiUI
 		});
         
         // This is a decorator/embellishment
-		Slider slider = new Slider (canvas, SWT.VERTICAL);
-		Rectangle clientArea = canvas.getClientArea ();
+		Slider slider = new Slider(canvas, SWT.VERTICAL);
+		Rectangle clientArea = canvas.getClientArea();
 		slider.setBounds (clientArea.width - 40, clientArea.y + 10, 32, clientArea.height);
+		slider.setMinimum(0);
+		slider.setMaximum(clientArea.y);
 		slider.addListener (SWT.Selection, event -> {
 			String string = "SWT.NONE";
 			switch (event.detail) {
-				case SWT.DRAG: string = "SWT.DRAG"; break;
+				case SWT.DRAG: 
+					{
+						string = "SWT.DRAG"; 
+						break;
+					}
 				case SWT.HOME: string = "SWT.HOME"; break;
 				case SWT.END: string = "SWT.END"; break;
 				case SWT.ARROW_DOWN: string = "SWT.ARROW_DOWN"; break;
@@ -139,31 +130,30 @@ public class LilLexiUI
 			}
 			System.out.println ("Scroll detail -> " + string);
 		});
+		slider.setIncrement(10);
 		
 		
 		// These will follow the command structure/pattern, they seem apt candidates for this
 		//---- main menu
 		Menu menuBar, fileMenu, insertMenu, fontMenu, helpMenu;
 		MenuItem fileMenuHeader, insertMenuHeader, fontMenuHeader, helpMenuHeader, fileExitItem, fileSaveItem, helpGetHelpItem;
-		MenuItem fileUndoItem;
+		MenuItem fileUndoItem, fileRedoItem;
 		MenuItem insertImageItem, insertRectItem;
 		MenuItem fontSize14Item, fontSize24Item, fontCourierItem, fontFixedItem;
 
 		menuBar = new Menu(shell, SWT.BAR);
 		
-		// Useless for now
 		fileMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
 		fileMenuHeader.setText("File");
 		fileMenu = new Menu(shell, SWT.DROP_DOWN);
 		fileMenuHeader.setMenu(fileMenu);
 		
-		// Also useless
-	    fileSaveItem = new MenuItem(fileMenu, SWT.PUSH);
-	    fileSaveItem.setText("Save");
 	    fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 	    fileExitItem.setText("Exit");
 	    fileUndoItem = new MenuItem(fileMenu, SWT.PUSH);
 	    fileUndoItem.setText("Undo");
+	    fileRedoItem = new MenuItem(fileMenu, SWT.PUSH);
+	    fileRedoItem.setText("Redo");
 	    
 	    // Working
 		insertMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
@@ -217,26 +207,11 @@ public class LilLexiUI
 	    insertRectItem.addSelectionListener(new RectCommand(50, lexiControl));
 	    
 	    // Adds an image to the lexi file
-	    insertImageItem.addSelectionListener(new ImageCommand(50, lexiControl));
+	    insertImageItem.addSelectionListener(new ImageCommand(display, lexiControl));
 	    
 	    fileUndoItem.addSelectionListener(new UndoCommand(lexiControl));
-
-	    /*
-	    // Do we just remove this? we don't want to save the file that's
-	    // not required for this assignment
-	    fileSaveItem.addSelectionListener(new SelectionListener() {
-	    	public void widgetSelected(SelectionEvent event) {
-	    	}
-	    	public void widgetDefaultSelected(SelectionEvent event) {
-	    	}	    		
-	    });
 	    
-	    helpGetHelpItem.addSelectionListener(new SelectionListener() {
-	    	public void widgetSelected(SelectionEvent event) {
-	    	}
-	    	public void widgetDefaultSelected(SelectionEvent event) {
-	    	}	    		
-	    });	*/
+	    fileRedoItem.addSelectionListener(new RedoCommand(lexiControl));
 	    
         //Menu systemMenu = Display.getDefault().getSystemMenu();
         MenuItem[] mi = menuBar.getItems();

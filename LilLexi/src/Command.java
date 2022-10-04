@@ -102,18 +102,19 @@ class RectCommand extends Command {
 
 class ImageCommand extends Command {
 	private int size;
+	private Display display;
 	
-	public ImageCommand(int size, LilLexiControl control) {
+	public ImageCommand(Display disp, LilLexiControl control) {
 		super(control);
-		this.size = size;
+		display = disp;
 	}
 	
 	public void widgetSelected(SelectionEvent event) {
-		lexiControl.add(size);
+		lexiControl.add(display);
 	}
 	
 	public void widgetDefaultSelected(SelectionEvent event) {
-		lexiControl.add(size);
+		lexiControl.add(display);
 	}
 }
 
@@ -128,5 +129,19 @@ class UndoCommand extends Command {
 	
 	public void widgetDefaultSelected(SelectionEvent event) {
 		lexiControl.undo();
+	}
+}
+
+class RedoCommand extends Command {
+	public RedoCommand(LilLexiControl control) {
+		super(control);
+	}
+	
+	public void widgetSelected(SelectionEvent event) {
+		lexiControl.redo();
+	}
+	
+	public void widgetDefaultSelected(SelectionEvent event) {
+		lexiControl.redo();
 	}
 }
