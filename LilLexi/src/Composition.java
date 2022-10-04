@@ -14,7 +14,6 @@ public class Composition {
 		int y = -1;
 		int maxWidth = 700;
 		int rowWidth = 0;
-		//System.out.println(glyphs);
 		column = new ArrayList<Glyph>();
 		for (Glyph g : glyphs) {
 			rowWidth += g.bounds().width;
@@ -23,7 +22,6 @@ public class Composition {
 				rowWidth = g.bounds().width;
 				y++;
 				Glyph newRow = new Row(x, y);
-				
 				g.setY(y);
 				newRow.insert(g);
 				column.add(newRow);
@@ -34,7 +32,6 @@ public class Composition {
 				curRow.insert(g);
 				x++;
 			}
-			//System.out.println("We are at " + x + " what row?? " + y);
 		}
 		
 		return column;

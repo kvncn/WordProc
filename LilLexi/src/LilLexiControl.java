@@ -27,6 +27,7 @@ public class LilLexiControl
 	}
 	
 	void changeFontSize(int size) {
+		System.out.println("font size change");
 		currentDoc.changeFontSize(size);
 	}
 	

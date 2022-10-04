@@ -8,6 +8,4 @@ public abstract class Iterator {
 	public abstract boolean isDone();
 	
 	public abstract Glyph getCurrent();
-	
-	public abstract void insert(Glyph g);
 }

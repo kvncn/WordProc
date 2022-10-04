@@ -97,11 +97,11 @@ class Character extends Glyph{
 		
 	}
 	
-	public void setSpelling(boolean spelling) {
-		incorrectSpelling = spelling;
+	public void setMisspelled() {
+		incorrectSpelling = true;
 	}
 	
-	public boolean getSpelling() {
+	public boolean getMisspelled() {
 		return incorrectSpelling;
 	}
 
@@ -115,8 +115,12 @@ class Character extends Glyph{
 
 	@Override
 	public void draw(PaintEvent e) {
-		
 		Font newFont = new Font(e.display, font, fontSize, SWT.BOLD );
+		if(incorrectSpelling) {
+			e.gc.setForeground(e.display.getSystemColor(SWT.COLOR_RED)); 
+		}else {
+			e.gc.setForeground(e.display.getSystemColor(SWT.COLOR_BLUE));
+		}
 		e.gc.setFont(newFont);
 		e.gc.drawString(c, x +10, y * (maxHeight+1));	
 	}	
@@ -136,11 +140,11 @@ class Character extends Glyph{
 	
 	
 	public void changeSize(int size) {
-		if(size == 20) {
-			fontSize = 20;
-		}
 		if(size == 24) {
-			fontSize = 20;
+			fontSize = 24;
+		}
+		if(size == 14) {
+			fontSize = 14;
 		}
 	}
 
@@ -160,9 +164,7 @@ class Character extends Glyph{
 
 	@Override
 	public void checkMe(SpellingCheckingVistor checker) {
-		
 		checker.visitCharacter(this);
-		
 	}
 	
 }

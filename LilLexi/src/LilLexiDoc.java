@@ -12,6 +12,7 @@ class LilLexiDoc extends Compositor {
 	private List<Glyph> comp;
 	private String currentFont;
 	private int currentSize;
+	private SpellingCheckingVistor spellCheck;
 	
 	/**
 	 * Ctor
@@ -26,6 +27,7 @@ class LilLexiDoc extends Compositor {
 		comp = composition.compose(glyphs);
 		currentFont = "Courier";
 		currentSize = 24;
+		spellCheck = new SpellingCheckingVistor();
 	}
 	
 	
@@ -43,7 +45,8 @@ class LilLexiDoc extends Compositor {
 		// always add to latest row
 		//default is courier 24 so default will always be x*25, and y *40
 		glyphs.add(cursor, new Character(cursor * 25, cursor * 40, c));
-		Character cur = (Character) glyphs.get(glyphs.size()-1);
+		Character cur = (Character) glyphs.get(glyphs.size()-2);
+		cur.checkMe(spellCheck);
 		cur.changeFont(currentFont);
 		cur.changeSize(currentSize);
 		cursor++;
