@@ -1,14 +1,23 @@
-/**
- * UI for Lil Lexi
- * 
- */
+/*
+* AUTHOR: Kevin Nisterenko
+* FILE: LilLexiUI.java
+* ASSIGNMENT: A2 - LilLexi
+* COURSE: CSc 335; Fall 2022
+* PURPOSE: This class serves as the view (in an MVC idea) of the
+* LilLexi application. Here is where the UI and shell are setup, as well
+* as the listeners for any and all events that the user will interact with
+* in the application (scrolling, commands, basic keyboard typing). It is
+* a modified version of Claveau's version.
+*
+* There are no inputs for this specific file. 
+*/
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.GridLayout;
 
-// Just so it pushes
 
 /**
  * LilLexiUI
@@ -23,7 +32,8 @@ public class LilLexiUI
 	private Canvas canvas;	
 	
 	/**
-	 * Ctor
+	 * Constructor for the UI of LilLexi, starts the basic layout and
+	 * shell. 
 	 */
 	public LilLexiUI() 
 	{
@@ -37,10 +47,10 @@ public class LilLexiUI
 	}
 		
 	/**
-	 * start the editor
+	 * Setups and starts the UI for LilLexi, has the basic listeners
+	 * and commands asked in class, as well as the scrollbar decorator. 
 	 */
-	public void start()
-	{	
+	public void start() {	
 		//---- create widgets for the interface
 	    Composite upperComp = new Composite(shell, SWT.NO_FOCUS);
 	    //Composite lowerComp = new Composite(shell, SWT.NO_FOCUS);
@@ -53,7 +63,8 @@ public class LilLexiUI
 		canvas.addPaintListener(new CanvasPaintListener(shell, display, currentDoc));	
 		
 		
-        // This gets the character from keyboard
+        // This key Listener is used to get a character from the keyboard and
+		// then call the appropriate control additon (or removal if backspace)
         canvas.addKeyListener(new KeyAdapter()
 		{	
 			public void keyPressed(KeyEvent e)
@@ -64,18 +75,19 @@ public class LilLexiUI
 				if(e.keyCode == SWT.BS)
 				{
 					lexiControl.remove();	
-					canvas.update();
-					canvas.redraw();
 				}
 				
+				// just add a space to the string
 				if (e.keyCode == SWT.SPACE) {
 					string += " ";
 				}
 				
+				// adds the character to the string
 				if (e.keyCode != SWT.BS) {
 					string += "" + e.character;
 				}
 				
+				// if the string is not empty, add the glyph/char
 				if(!string.equals("")) {
 					System.out.println("ADDING!!!!");
 					lexiControl.add(string);
@@ -85,16 +97,21 @@ public class LilLexiUI
         
         // This is a decorator/embellishment
         // Since it is already encapsulated by SWT, no need to
-        // setup a new abstract class
+        // setup a new abstract class 
+        // DAVID GAVE THE OKAY FOR THIS ON OCT 4th
         Point origin = new Point(0,0);
         ScrollBar vBar = canvas.getVerticalBar();
+        // adds a listener to the vertical bar, so we can scroll and 
+        // change its position
         vBar.addListener(SWT.Selection, e -> {
-        	int vSelection = vBar.getSelection ();
-    		int destY = -vSelection - origin.y;
+        	int vSelection = vBar.getSelection();
+    		int destY = -vSelection + origin.y;
     		canvas.scroll (0, destY, 0, 0, 800, 800, false);
     		origin.y = -vSelection;
         });
         
+        // adds a resize listener to the canvas so we can shift it
+        // based on the vertical bar's position
         canvas.addListener (SWT.Resize,  e -> {
     		Rectangle rect = canvas.getClientArea();
     		Rectangle client = canvas.getClientArea();
@@ -104,29 +121,32 @@ public class LilLexiUI
     		int vPage = rect.height - client.height;
     		int vSelection = vBar.getSelection ();
     
+    		// Resets the vertical bar
     		if (vSelection >= vPage) {
     			if (vPage <= 0) vSelection = 0;
     			origin.y = -vSelection;
     		}
-    		canvas.redraw ();
     	});
 		
 		
-		// These will follow the command structure/pattern, they seem apt candidates for this
+		// sets the commands for the menu, all choices are commands, as this
+        // works to encapsulate their functionality
 		//---- main menu
-		Menu menuBar, fileMenu, insertMenu, fontMenu, helpMenu;
-		MenuItem fileMenuHeader, insertMenuHeader, fontMenuHeader, helpMenuHeader, fileExitItem;
+		Menu menuBar, fileMenu, insertMenu, fontMenu;
+		MenuItem fileMenuHeader, insertMenuHeader, fontMenuHeader, fileExitItem;
 		MenuItem fileUndoItem, fileRedoItem;
 		MenuItem insertImageItem, insertRectItem;
 		MenuItem fontSize14Item, fontSize24Item, fontCourierItem, fontFixedItem;
 
 		menuBar = new Menu(shell, SWT.BAR);
 		
+		// File menu setup
 		fileMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
 		fileMenuHeader.setText("File");
 		fileMenu = new Menu(shell, SWT.DROP_DOWN);
 		fileMenuHeader.setMenu(fileMenu);
 		
+		// Exit, undo and redo widget setup
 	    fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 	    fileExitItem.setText("Exit");
 	    fileUndoItem = new MenuItem(fileMenu, SWT.PUSH);
@@ -134,18 +154,19 @@ public class LilLexiUI
 	    fileRedoItem = new MenuItem(fileMenu, SWT.PUSH);
 	    fileRedoItem.setText("Redo");
 	    
-	    // Working
+	    // Insert menu setup
 		insertMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
 		insertMenuHeader.setText("Insert");
 		insertMenu = new Menu(shell, SWT.DROP_DOWN);
 		insertMenuHeader.setMenu(insertMenu);
 		
-		//font
+		// Font menu setup
 		fontMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
 		fontMenuHeader.setText("Font");
 		fontMenu = new Menu(shell, SWT.DROP_DOWN);
 		fontMenuHeader.setMenu(fontMenu);
 		
+		// font changer widgets' setup
 		fontCourierItem = new MenuItem(fontMenu, SWT.PUSH);
 		fontCourierItem.setText("Font: Courier");
 		fontFixedItem = new MenuItem(fontMenu, SWT.PUSH);
@@ -155,19 +176,13 @@ public class LilLexiUI
 		fontSize24Item = new MenuItem(fontMenu, SWT.PUSH);
 		fontSize24Item.setText("Font Size: 24");
 		
-		// TBD Functionality
+		// Insert an image setup
 	    insertImageItem = new MenuItem(insertMenu, SWT.PUSH);
 	    insertImageItem.setText("Image");
 	    insertRectItem = new MenuItem(insertMenu, SWT.PUSH);
 	    insertRectItem.setText("Rectangle");
-	    
-	    // Useless
-	    helpMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
-	    helpMenuHeader.setText("Help");
-	    helpMenu = new Menu(shell, SWT.DROP_DOWN);
-	    helpMenuHeader.setMenu(helpMenu);
 
-	    //font listeners
+	    // Font and Size Commands
 	    fontCourierItem.addSelectionListener(new FontChanger("Courier", lexiControl));
 	    
 	    fontFixedItem.addSelectionListener(new FontChanger("Fixed", lexiControl));
@@ -176,7 +191,7 @@ public class LilLexiUI
 	    
 	    fontSize24Item.addSelectionListener(new SizeChanger(24, lexiControl));
 	    
-	    // Closes the file
+	    // Closes the file with the command
 	    fileExitItem.addSelectionListener(new ExitCommand(shell, display, lexiControl));
 	    
 	    // Adds a rectangle to the lexi file
@@ -188,8 +203,7 @@ public class LilLexiUI
 	    fileUndoItem.addSelectionListener(new UndoCommand(lexiControl));
 	    
 	    fileRedoItem.addSelectionListener(new RedoCommand(lexiControl));
-	    
-        //Menu systemMenu = Display.getDefault().getSystemMenu();
+
         MenuItem[] mi = menuBar.getItems();
         mi[0].addListener(SWT.Selection, new Listener() {
             public void handleEvent(Event event){
@@ -197,6 +211,7 @@ public class LilLexiUI
             }
         });
 	    
+        // Sets the menu to the shell
 	    shell.setMenuBar(menuBar);
 	      
 		//---- event loop
@@ -207,20 +222,27 @@ public class LilLexiUI
 	} 
 
 	/**
-	 * updateUI
+	 * Calls the canvas redraw method to update the UI to any changes
+	 * made to the document or to it.
 	 */
-	public void updateUI()
-	{
+	public void updateUI() {
 		System.out.println("updateUI");
 		canvas.redraw();
 	}
 	
 	/**
-	 * setCurrentDoc
+	 * Sets the current LilLexiDoc (Model) of the application.
+	 * 
+	 * @param cd, LilLexiDoc object representing current model 
+	 * of the document.
 	 */
 	public void setCurrentDoc(LilLexiDoc cd) { currentDoc = cd; }
+	
 	/**
-	 * setController
+	 * Sets the current LilLexiControl (Controller) of the application.
+	 * 
+	 * @param lc, LilLexiControl object representing current controller 
+	 * of the document.
 	 */
 	public void setController(LilLexiControl lc) { lexiControl = lc; }
 }

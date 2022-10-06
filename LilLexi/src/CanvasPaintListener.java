@@ -5,7 +5,7 @@
 * COURSE: CSc 335; Fall 2022
 * PURPOSE: This class is an implementation of the PaintListener 
 * class, it is slightly modified from the one given by the instructor.
-* The use of this class is to draw the lexi window, particularly the glyphs 
+* The use of this class is to draw the LilLexi window, particularly the glyphs 
 * on the canvas. 
 *
 * There are no inputs for this specific file. 
