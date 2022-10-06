@@ -115,7 +115,7 @@ class Character extends Glyph{
 
 	@Override
 	public void draw(PaintEvent e) {
-		Font newFont = new Font(e.display, font, fontSize, SWT.BOLD );
+		Font newFont = new Font(e.display, font, fontSize, SWT.BOLD);
 		if(incorrectSpelling) {
 			e.gc.setForeground(e.display.getSystemColor(SWT.COLOR_RED)); 
 		}else {

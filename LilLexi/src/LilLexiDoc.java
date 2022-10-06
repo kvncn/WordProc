@@ -69,7 +69,7 @@ class LilLexiDoc extends Composition {
 		}
 		currentSize = size;
 		comp = compositor.compose(glyphs);
-		ui.updateUI();
+		ui.updateUI(); 
 	}
 	
 	public void add(int rectSize) {

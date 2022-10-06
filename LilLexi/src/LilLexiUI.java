@@ -7,8 +7,6 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.graphics.Font;
-import java.util.List;
 
 // Just so it pushes
 
@@ -48,23 +46,13 @@ public class LilLexiUI
 	    //Composite lowerComp = new Composite(shell, SWT.NO_FOCUS);
 	    
 	    //---- canvas for the document
-		canvas = new Canvas(upperComp, SWT.NONE);
+		canvas = new Canvas(upperComp, SWT.V_SCROLL);
 		canvas.setSize(800,800);
 		
-		
-		// This is likely involved with the compositor/strategy pattern
 		// canvas paint listener, repaints canvas after redraw called
 		canvas.addPaintListener(new CanvasPaintListener(shell, display, currentDoc));	
 		
-		/*
-        canvas.addMouseListener(new MouseListener() {
-            public void mouseDown(MouseEvent e) {
-            	System.out.println("mouseDown in canvas");
-            } 
-            public void mouseUp(MouseEvent e) {} 
-            public void mouseDoubleClick(MouseEvent e) {} 
-        });
-        */
+		
         // This gets the character from keyboard
         canvas.addKeyListener(new KeyAdapter()
 		{	
@@ -72,10 +60,6 @@ public class LilLexiUI
 			{
 				String string = "";
 				
-				//check click together? maybe for undo idk
-				//if ((e.stateMask & SWT.ALT) != 0) string += "" + e.keyCode;
-				//if ((e.stateMask & SWT.CTRL) != 0) string += "" + e.keyCode;
-				//if ((e.stateMask & SWT.SHIFT) != 0) string += "" + e.keyCode;
 			
 				// backspace
 				if(e.keyCode == SWT.BS)
@@ -84,13 +68,6 @@ public class LilLexiUI
 					canvas.update();
 					canvas.redraw();
 				}
-				
-				/*
-				if(e.keyCode == SWT.ESC)
-				{
-					string += "" + e.keyCode;
-				}
-				*/
 				
 				if (e.keyCode == SWT.SPACE) {
 					string += " ";
@@ -108,35 +85,38 @@ public class LilLexiUI
 		});
         
         // This is a decorator/embellishment
-		Slider slider = new Slider(canvas, SWT.VERTICAL);
-		Rectangle clientArea = canvas.getClientArea();
-		slider.setBounds (clientArea.width - 40, clientArea.y + 10, 32, clientArea.height);
-		slider.setMinimum(0);
-		slider.setMaximum(clientArea.y);
-		slider.addListener (SWT.Selection, event -> {
-			String string = "SWT.NONE";
-			switch (event.detail) {
-				case SWT.DRAG: 
-					{
-						string = "SWT.DRAG"; 
-						break;
-					}
-				case SWT.HOME: string = "SWT.HOME"; break;
-				case SWT.END: string = "SWT.END"; break;
-				case SWT.ARROW_DOWN: string = "SWT.ARROW_DOWN"; break;
-				case SWT.ARROW_UP: string = "SWT.ARROW_UP"; break;
-				case SWT.PAGE_DOWN: string = "SWT.PAGE_DOWN"; break;
-				case SWT.PAGE_UP: string = "SWT.PAGE_UP"; break;
-			}
-			System.out.println ("Scroll detail -> " + string);
-		});
-		slider.setIncrement(10);
+        // Since it is already encapsulated by SWT, no need to
+        // setup a new abstract class
+        Point origin = new Point(0,0);
+        ScrollBar vBar = canvas.getVerticalBar();
+        vBar.addListener(SWT.Selection, e -> {
+        	int vSelection = vBar.getSelection ();
+    		int destY = -vSelection - origin.y;
+    		canvas.scroll (0, destY, 0, 0, 800, 800, false);
+    		origin.y = -vSelection;
+        });
+        
+        canvas.addListener (SWT.Resize,  e -> {
+    		Rectangle rect = canvas.getClientArea();
+    		Rectangle client = canvas.getClientArea();
+  
+    		vBar.setMaximum (rect.height);
+    		vBar.setThumb (Math.min (rect.height, client.height));
+    		int vPage = rect.height - client.height;
+    		int vSelection = vBar.getSelection ();
+    
+    		if (vSelection >= vPage) {
+    			if (vPage <= 0) vSelection = 0;
+    			origin.y = -vSelection;
+    		}
+    		canvas.redraw ();
+    	});
 		
 		
 		// These will follow the command structure/pattern, they seem apt candidates for this
 		//---- main menu
 		Menu menuBar, fileMenu, insertMenu, fontMenu, helpMenu;
-		MenuItem fileMenuHeader, insertMenuHeader, fontMenuHeader, helpMenuHeader, fileExitItem, fileSaveItem, helpGetHelpItem;
+		MenuItem fileMenuHeader, insertMenuHeader, fontMenuHeader, helpMenuHeader, fileExitItem;
 		MenuItem fileUndoItem, fileRedoItem;
 		MenuItem insertImageItem, insertRectItem;
 		MenuItem fontSize14Item, fontSize24Item, fontCourierItem, fontFixedItem;
@@ -188,9 +168,6 @@ public class LilLexiUI
 	    helpMenu = new Menu(shell, SWT.DROP_DOWN);
 	    helpMenuHeader.setMenu(helpMenu);
 
-	    helpGetHelpItem = new MenuItem(helpMenu, SWT.PUSH);
-	    helpGetHelpItem.setText("Get Help");
-	    
 	    //font listeners
 	    fontCourierItem.addSelectionListener(new FontChanger("Courier", lexiControl));
 	    
