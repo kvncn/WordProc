@@ -60,7 +60,6 @@ public class LilLexiUI
 			{
 				String string = "";
 				
-			
 				// backspace
 				if(e.keyCode == SWT.BS)
 				{

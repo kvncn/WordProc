@@ -107,7 +107,6 @@ class RectCommand extends Command {
 }
 
 class ImageCommand extends Command {
-	private int size;
 	private Display display;
 	
 	public ImageCommand(Display disp, LilLexiControl control) {

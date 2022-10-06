@@ -112,6 +112,7 @@ class LilLexiDoc extends Composition {
 			// removes what came before cursor!
 			glyphs.remove(cursor-1);
 			cursor--;
+			removed = true;
 			//glyphs.add(cursor, new Cursor(cursor, cursor * 25, cursor * 40));
 			comp = compositor.compose(glyphs);
 			ui.updateUI();
