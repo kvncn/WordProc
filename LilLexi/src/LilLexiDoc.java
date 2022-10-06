@@ -2,8 +2,6 @@ import java.util.List;
 
 import org.eclipse.swt.widgets.Display;
 
-
-
 class LilLexiDoc extends Composition {
 	private String currentFont;
 	private int currentSize;
@@ -64,7 +62,7 @@ class LilLexiDoc extends Composition {
 	public void changeFontSize(int size) {
 		for(Glyph g : glyphs) {
 			if(g instanceof Character) {
-				((Character) g).changeSize(size);;
+				((Character) g).changeSize(size);
 			}
 		}
 		currentSize = size;
@@ -134,7 +132,7 @@ class LilLexiDoc extends Composition {
 		this.add(last);
 	}
 	/**
-	 * gets glyphs list (this is kinda like the document itself
+	 * Gets glyphs list (this is kinda like the document itself
 	 * we can iterate, build strings until we hit a space, then 
 	 * just add a marker to each string ("s!") for example, that 
 	 * will allows us to display wrongly spelled words differently

@@ -175,7 +175,7 @@ public class LilLexiUI
 	    
 	    fontSize14Item.addSelectionListener(new SizeChanger(14, lexiControl));
 	    
-	    fontSize14Item.addSelectionListener(new SizeChanger(24, lexiControl));
+	    fontSize24Item.addSelectionListener(new SizeChanger(24, lexiControl));
 	    
 	    // Closes the file
 	    fileExitItem.addSelectionListener(new ExitCommand(shell, display, lexiControl));

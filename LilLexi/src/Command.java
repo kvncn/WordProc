@@ -3,6 +3,12 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+/** 
+ * Because we are using SWT UI framework, command will implement
+ * a listener so it can cause changes on the display in a more
+ * seamless manner. 
+ *
+ */
 public abstract class Command implements SelectionListener {
 	protected LilLexiControl lexiControl;
 	
