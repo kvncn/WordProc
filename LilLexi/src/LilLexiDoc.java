@@ -1,33 +1,25 @@
-import java.util.ArrayList;
 import java.util.List;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.eclipse.swt.widgets.Display;
 
-class LilLexiDoc extends Compositor {
-	private LilLexiUI ui;
-	private int cursor;
-	private List<Glyph> glyphs;
-	private Composition composition;
-	private List<Glyph> comp;
+
+
+class LilLexiDoc extends Composition {
 	private String currentFont;
 	private int currentSize;
-	private SpellingCheckingVistor spellCheck;
+	private Glyph last;
+	private boolean removed;
 	
 	/**
 	 * Ctor
 	 */
 	public LilLexiDoc() {
+		super();
 		// this is just going to be our list of rows for now
 		// cause we only have one column
-		glyphs = new ArrayList<Glyph>(); // if we want more columns, we can work it out here
-		cursor = 0;
-		glyphs.add(new Cursor(0, 0));
-		composition = new Composition();
-		comp = composition.compose(glyphs);
 		currentFont = "Courier";
 		currentSize = 24;
-		spellCheck = new SpellingCheckingVistor();
+		removed = false;
 	}
 	
 	
@@ -44,14 +36,17 @@ class LilLexiDoc extends Compositor {
 	public void add(String c) {
 		// always add to latest row
 		//default is courier 24 so default will always be x*25, and y *40
-		glyphs.add(cursor, new Character(cursor * 25, cursor * 40, c));
-		Character cur = (Character) glyphs.get(glyphs.size()-2);
+		Glyph charac = new Character(cursor * 25, cursor * 40, c);
+		glyphs.add(cursor, charac);
+		last = charac;
+		Character cur = (Character) glyphs.get(cursor);
 		cur.checkMe(spellCheck);
 		cur.changeFont(currentFont);
 		cur.changeSize(currentSize);
 		cursor++;
+		removed = false;
 		//glyphs.add(cursor, new Cursor(cursor, cursor, cursor));
-		comp = composition.compose(glyphs);
+		comp = compositor.compose(glyphs);
 		ui.updateUI();
 	}
 	
@@ -62,6 +57,8 @@ class LilLexiDoc extends Compositor {
 			}
 		}
 		currentFont = font;
+		comp = compositor.compose(glyphs);
+		ui.updateUI();
 	}
 	
 	public void changeFontSize(int size) {
@@ -71,24 +68,39 @@ class LilLexiDoc extends Compositor {
 			}
 		}
 		currentSize = size;
+		comp = compositor.compose(glyphs);
+		ui.updateUI();
 	}
 	
 	public void add(int rectSize) {
 		//default is courier 24 so default will always be x*25, and y *40
-		glyphs.add(cursor, new GRectangle(cursor * 25, cursor * 40, rectSize, rectSize));
+		Glyph rect = new GRectangle(cursor * 25, cursor * 40, rectSize, rectSize);
+		glyphs.add(cursor, rect);
+		last = rect;
 		cursor++;
+		removed = false;
 		//glyphs.add(cursor, new Cursor(cursor, cursor, cursor));
-		comp = composition.compose(glyphs);
+		comp = compositor.compose(glyphs);
 		ui.updateUI();
 	}
 	
-//	public void add() {
-//		glyphs.add(cursor, new Image(cursor * 25, cursor * 40));
-//		cursor++;
-//		//glyphs.add(cursor, new Cursor(cursor, cursor, cursor));
-//		comp = composition.compose(glyphs);
-//		ui.updateUI();
-//	}
+	public void add(Glyph g) {
+		glyphs.add(cursor, g);
+		cursor++;
+		//glyphs.add(cursor, new Cursor(cursor, cursor, cursor));
+		comp = compositor.compose(glyphs);
+		ui.updateUI();
+	}
+	
+	public void add(Display display) {
+		Glyph img = new GImage(cursor * 25, cursor * 40, display);
+		glyphs.add(cursor, img);
+		cursor++;
+		last = img;
+		//glyphs.add(cursor, new Cursor(cursor, cursor, cursor));
+		comp = compositor.compose(glyphs);
+		ui.updateUI();
+	}
 	
 	/* 
 	 * For backspace, remove last glyph from document
@@ -103,11 +115,24 @@ class LilLexiDoc extends Compositor {
 			glyphs.remove(cursor-1);
 			cursor--;
 			//glyphs.add(cursor, new Cursor(cursor, cursor * 25, cursor * 40));
-			comp = composition.compose(glyphs);
+			comp = compositor.compose(glyphs);
 			ui.updateUI();
 		}
 	}
 	
+	public void undo() {
+		if (glyphs.size() == 1) {
+			return;
+		}
+		this.remove();
+	}	
+	
+	public void redo() {
+		if (glyphs.size() == 1 || !removed) {
+			return;
+		}
+		this.add(last);
+	}
 	/**
 	 * gets glyphs list (this is kinda like the document itself
 	 * we can iterate, build strings until we hit a space, then 

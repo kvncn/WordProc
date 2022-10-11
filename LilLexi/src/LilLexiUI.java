@@ -7,36 +7,9 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.graphics.Font;
 import java.util.List;
 
-/**
- * UI for Lil Lexi
- * 
- */
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.graphics.Font;
-import java.util.List;
-
-/**
- * UI for Lil Lexi
- * 
- */
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.graphics.Font;
-import java.util.List;
-// Just so it pushes
 
 /**
  * LilLexiUI
@@ -77,26 +50,12 @@ public class LilLexiUI
 		canvas = new Canvas(upperComp, SWT.NONE);
 		canvas.setSize(800,800);
 		
+		
 		// This is likely involved with the compositor/strategy pattern
 		// canvas paint listener, repaints canvas after redraw called
-		canvas.addPaintListener(e -> {
-			System.out.println("PaintListener");
-			Rectangle rect = shell.getClientArea();
-			e.gc.setBackground(display.getSystemColor(SWT.COLOR_WHITE)); 
-            e.gc.fillRectangle(rect.x, rect.y, rect.width, rect.height);
-            e.gc.setForeground(display.getSystemColor(SWT.COLOR_BLUE)); 
-            // might want to change this and just pass a font? use the e.setFont thingie in a command
-    		Font font = new Font(display, "Courier", 24, SWT.BOLD );
-    		e.gc.setFont(font);
-    		
-    		List<Glyph> glyphs = currentDoc.getGlyphs();
-    		for (Glyph g: glyphs)
-    		{
-    			// Only need to call the draw method from a glyph, worry not about which type of glyph it is!
-    			g.draw(e);   // Damn bro nice encapsulation and polymorphism, love to see it
-    		}
-		});	
+		canvas.addPaintListener(new CanvasPaintListener(shell, display, currentDoc));	
 		
+		/*
         canvas.addMouseListener(new MouseListener() {
             public void mouseDown(MouseEvent e) {
             	System.out.println("mouseDown in canvas");
@@ -104,7 +63,7 @@ public class LilLexiUI
             public void mouseUp(MouseEvent e) {} 
             public void mouseDoubleClick(MouseEvent e) {} 
         });
-        
+        */
         // This gets the character from keyboard
         canvas.addKeyListener(new KeyAdapter()
 		{	
@@ -131,6 +90,7 @@ public class LilLexiUI
 					string += "" + e.keyCode;
 				}
 				*/
+				
 				if (e.keyCode == SWT.SPACE) {
 					string += " ";
 				}
@@ -140,20 +100,26 @@ public class LilLexiUI
 				}
 				
 				if(!string.equals("")) {
-					System.out.println(string);
+					System.out.println("ADDING!!!!");
 					lexiControl.add(string);
 				}
 			}
 		});
         
         // This is a decorator/embellishment
-		Slider slider = new Slider (canvas, SWT.VERTICAL);
-		Rectangle clientArea = canvas.getClientArea ();
+		Slider slider = new Slider(canvas, SWT.VERTICAL);
+		Rectangle clientArea = canvas.getClientArea();
 		slider.setBounds (clientArea.width - 40, clientArea.y + 10, 32, clientArea.height);
+		slider.setMinimum(0);
+		slider.setMaximum(clientArea.y);
 		slider.addListener (SWT.Selection, event -> {
 			String string = "SWT.NONE";
 			switch (event.detail) {
-				case SWT.DRAG: string = "SWT.DRAG"; break;
+				case SWT.DRAG: 
+					{
+						string = "SWT.DRAG"; 
+						break;
+					}
 				case SWT.HOME: string = "SWT.HOME"; break;
 				case SWT.END: string = "SWT.END"; break;
 				case SWT.ARROW_DOWN: string = "SWT.ARROW_DOWN"; break;
@@ -163,28 +129,30 @@ public class LilLexiUI
 			}
 			System.out.println ("Scroll detail -> " + string);
 		});
+		slider.setIncrement(10);
 		
 		
 		// These will follow the command structure/pattern, they seem apt candidates for this
 		//---- main menu
 		Menu menuBar, fileMenu, insertMenu, fontMenu, helpMenu;
 		MenuItem fileMenuHeader, insertMenuHeader, fontMenuHeader, helpMenuHeader, fileExitItem, fileSaveItem, helpGetHelpItem;
+		MenuItem fileUndoItem, fileRedoItem;
 		MenuItem insertImageItem, insertRectItem;
 		MenuItem fontSize14Item, fontSize24Item, fontCourierItem, fontFixedItem;
 
 		menuBar = new Menu(shell, SWT.BAR);
 		
-		// Useless for now
 		fileMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
 		fileMenuHeader.setText("File");
 		fileMenu = new Menu(shell, SWT.DROP_DOWN);
 		fileMenuHeader.setMenu(fileMenu);
 		
-		// Also useless
-	    fileSaveItem = new MenuItem(fileMenu, SWT.PUSH);
-	    fileSaveItem.setText("Save");
 	    fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 	    fileExitItem.setText("Exit");
+	    fileUndoItem = new MenuItem(fileMenu, SWT.PUSH);
+	    fileUndoItem.setText("Undo");
+	    fileRedoItem = new MenuItem(fileMenu, SWT.PUSH);
+	    fileRedoItem.setText("Redo");
 	    
 	    // Working
 		insertMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
@@ -223,124 +191,26 @@ public class LilLexiUI
 	    helpGetHelpItem.setText("Get Help");
 	    
 	    //font listeners
-	    fontCourierItem.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				lexiControl.changeFont("Courier");
-				
-			}
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
-				lexiControl.changeFont("Courier");
-			}
-	    	
-	    });
+	    fontCourierItem.addSelectionListener(new FontChanger("Courier", lexiControl));
 	    
-	    fontFixedItem.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				lexiControl.changeFont("Fixed");
-				
-			}
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
-				lexiControl.changeFont("Fixed");
-			}
-	    	
-	    });
-	    fontSize14Item.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				lexiControl.changeFontSize(14);
-				
-			}
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				lexiControl.changeFontSize(14);
-				// TODO Auto-generated method stub
-				
-			}
-	    	
-	    });
+	    fontFixedItem.addSelectionListener(new FontChanger("Fixed", lexiControl));
 	    
-	    fontSize24Item.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
-				lexiControl.changeFontSize(24);
-				
-			}
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
-				lexiControl.changeFontSize(24);
-			}
-	    	
-	    });
+	    fontSize14Item.addSelectionListener(new SizeChanger(14, lexiControl));
+	    
+	    fontSize24Item.addSelectionListener(new SizeChanger(24, lexiControl));
 	    
 	    // Closes the file
-	    fileExitItem.addSelectionListener(new SelectionListener() {
-	    	public void widgetSelected(SelectionEvent event) {
-	    		shell.close();
-	    		display.dispose();
-	    	}
-	    	public void widgetDefaultSelected(SelectionEvent event) {
-	    		shell.close();
-	    		display.dispose();
-	    	}
-	    });
+	    fileExitItem.addSelectionListener(new ExitCommand(shell, display, lexiControl));
 	    
 	    // Adds a rectangle to the lexi file
-	    insertRectItem.addSelectionListener(new SelectionListener() {
-	    	public void widgetSelected(SelectionEvent event) {
-	    		lexiControl.add(50);
-	    	}
-	    	public void widgetDefaultSelected(SelectionEvent event) {
-	    		lexiControl.add(20);
-	    	}
-	    });
+	    insertRectItem.addSelectionListener(new RectCommand(50, lexiControl));
 	    
 	    // Adds an image to the lexi file
-	    insertImageItem.addSelectionListener(new SelectionListener() {
-	    	public void widgetSelected(SelectionEvent event) {
-	    		lexiControl.add(20);
-	    	}
-	    	public void widgetDefaultSelected(SelectionEvent event) {
-	    		lexiControl.add(20);
-	    	}
-	    });
+	    insertImageItem.addSelectionListener(new ImageCommand(display, lexiControl));
 	    
-	    // Adds a rectangle to the lexi file
-	    insertImageItem.addSelectionListener(new SelectionListener() {
-	    	public void widgetSelected(SelectionEvent event) {
-	    		lexiControl.add(20);
-	    	}
-	    	public void widgetDefaultSelected(SelectionEvent event) {
-	    		lexiControl.add(20);
-	    	}
-	    });
+	    fileUndoItem.addSelectionListener(new UndoCommand(lexiControl));
 	    
-	    // Do we just remove this? we don't want to save the file that's
-	    // not required for this assignment
-	    fileSaveItem.addSelectionListener(new SelectionListener() {
-	    	public void widgetSelected(SelectionEvent event) {
-	    	}
-	    	public void widgetDefaultSelected(SelectionEvent event) {
-	    	}	    		
-	    });
-	    
-	    helpGetHelpItem.addSelectionListener(new SelectionListener() {
-	    	public void widgetSelected(SelectionEvent event) {
-	    	}
-	    	public void widgetDefaultSelected(SelectionEvent event) {
-	    	}	    		
-	    });	
+	    fileRedoItem.addSelectionListener(new RedoCommand(lexiControl));
 	    
         //Menu systemMenu = Display.getDefault().getSystemMenu();
         MenuItem[] mi = menuBar.getItems();

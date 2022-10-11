@@ -1,3 +1,4 @@
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Controller
@@ -27,7 +28,6 @@ public class LilLexiControl
 	}
 	
 	void changeFontSize(int size) {
-		System.out.println("font size change");
 		currentDoc.changeFontSize(size);
 	}
 	
@@ -39,18 +39,32 @@ public class LilLexiControl
 		currentDoc.add(size);
 	}	
 	
+	public void add(Display display) {
+		// TODO Auto-generated method stub
+		currentDoc.add(display);
+	}
+	
 	/*
 	 * Backspace
 	 */
 	void remove() {
 		currentDoc.remove();
 	}
-
+	
+	void undo() {
+		currentDoc.undo();
+	}
+	
+	public void redo() {
+		currentDoc.redo();
+		
+	}	
+	
 	/**
 	 * quitEditor  user quits
 	 */
 	void  quitEditor() 
 	{ 
 		System.exit(0); 
-	}	
+	}
 }
