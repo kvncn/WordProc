@@ -7,13 +7,36 @@ import java.util.Scanner;
 import java.util.Set;
 
 import org.eclipse.swt.graphics.Image;
-
+/**
+ * 
+ * @author Kate Nixon
+ * 
+ * CSC 335 - David
+ * 
+ * Program: SpellingCheckingVisitor.java
+ * Overall Project: LilLexi
+ * 
+ * This is the concrete instantiation of Visitor class.
+ * This class implements the Visitor pattern
+ * to visit each of the different Glyphs.
+ * 
+ * The main purpose is to see if the characters are spelled
+ * correctly.
+ * 
+ * Other glyphs being visited will have nothing done to them
+ *
+ */
 public class SpellingCheckingVisitor extends Visitor {
 	
-	String curWord;
+	protected String curWord;
 	protected static List<Character> curLetters;
-	Set<String> dict;
+	protected Set<String> dict;
 	
+	/**
+	 * Constructor sets up a String to contain the
+	 * curWord, a list<Glyph> that are the curLetters,
+	 * and a small dictionary
+	 */
 	public SpellingCheckingVisitor() {
 		curWord = "";
 		curLetters = new ArrayList<>();
@@ -25,10 +48,16 @@ public class SpellingCheckingVisitor extends Visitor {
 		}
 	}
 
-
+	/**
+	 * Visits the character c and adds the String to the curWord
+	 * and the glyph to curLetters.
+	 * If the current character is not alphabetic, then
+	 * it will check if the word is recognized in the
+	 * dictionary or not
+	 */
 	@Override
 	public void visitCharacter(Character c) {
-		System.out.println("char is " +c.getChar());
+		//System.out.println("char is " +c.getChar());
 		if(java.lang.Character.isAlphabetic(c.getChar().charAt(0))) {
 			curWord += c.getChar();
 			curLetters.add(c);
@@ -41,11 +70,21 @@ public class SpellingCheckingVisitor extends Visitor {
 		}
 		
 	}
-	
+	/**
+	 * returns whether the string is in the dictionary
+	 * @param word
+	 * @return
+	 */
 	private boolean isMisspelled(String word) {
 		return !dict.contains(word.toLowerCase());
 	}
 	
+	/**
+	 * creates a dictionary based on dict2.txt
+	 * a small dictionary of 39,000+ words
+	 * @return
+	 * @throws FileNotFoundException
+	 */
 	private static Set<String> getDict() throws FileNotFoundException {
         Set<String> dict = new HashSet<>();
         Scanner scanner = new Scanner(new File("dict2.txt"));
@@ -56,38 +95,44 @@ public class SpellingCheckingVisitor extends Visitor {
         return dict;
 	}
 	
+	/**
+	 * set each character to misspelled
+	 */
 	private void setMisspelled() {
-		System.out.println("curletters " + curLetters.size());
 		for(Character c : curLetters) {
-			System.out.println("flag");
 			c.setMisspelled();
 		}
 	}
 
+	/**
+	 * stub for Row
+	 */
 	@Override
 	public void vistRow(Row r) {
-		// TODO Auto-generated method stub
 			
 	}
-
+	
+	/**
+	 * stub for GImage
+	 */
 	@Override
-	public void visitImage(Image i) {
-		// TODO Auto-generated method stub
+	public void visitImage(GImage i) {
 			
 	}
 
+	/**
+	 * stub for GRectangle
+	 */
 	@Override
 	public void visitRectangle(GRectangle rect) {
-		// TODO Auto-generated method stub
-		
 	}
 
+	/**
+	 * stub for Cursor
+	 */
 	@Override
 	public void visitCursor(Cursor cursor) {
-		// TODO Auto-generated method stub
 		
 	}
-		
 
 }
-
