@@ -13,6 +13,7 @@ import java.util.List;
  * caring if the glyphs are stored in an arrayLinked, linkedList,
  * etc.
  */
+
 public class ArrayListIterator extends Iterator {
 	protected List<Glyph> list;
 	protected int pointer;
