@@ -1,21 +1,43 @@
 import java.util.ArrayList;
 import java.util.List;
-// Comment
+/**
+ * 
+ * @author Kate Nixon
+ * 
+ * Course: CSC 335 - David Claveau
+ * 
+ * Program: Compositor.java
+ * Part of Overall Project: Lil Lexi
+ * 
+ * Compositor takes a list<Glyph> from LilLexiDoc
+ * and formats the glyphs into rows on the document.
+ * 
+ */
 public class Compositor {
 	
 	private List<Glyph> column;
 	
+	/**
+	 * No args constructor for compositor
+	 * Creates the one column in Lil Lexi
+	 * (David mentioned that we would only
+	 * work with one column)
+	 */
 	public Compositor() {
 		column = new ArrayList<Glyph>();
 	}
 	
+	/**
+	 * Given a list<Glyph> compose them into
+	 * rows based on the max width of the document
+	 * @param List<Glyph>glyphs
+	 * @return column, the list of rows
+	 */
 	public List<Glyph> compose(List<Glyph> glyphs) {
-		System.out.println(glyphs);
 		int x = -1;
 		int y = -1;
 		int maxWidth = 700;
 		int rowWidth = 0;
-		//System.out.println(glyphs);
 		column = new ArrayList<Glyph>();
 		for (Glyph g : glyphs) {
 			rowWidth += g.bounds().width;
@@ -29,15 +51,13 @@ public class Compositor {
 				newRow.insert(g);
 				column.add(newRow);
 			} else {
-				//g.setX(x);
 				g.setY(y);
 				Row curRow = (Row) column.get(column.size()-1);
 				curRow.insert(g);
 				x++;
 			}
-			//System.out.println("We are at " + x + " what row?? " + y);
-		}
-		
+		}	
 		return column;
 	}
 }
+
