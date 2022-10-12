@@ -20,8 +20,9 @@ import org.eclipse.swt.widgets.Display;
 class LilLexiDoc extends Composition {
 	private String currentFont;
 	private int currentSize;
-	private Glyph last; // for undoing/redoing
-	private boolean removed; // for undoing/redoing
+	// for undoing/redoing
+	private Glyph last;
+	private boolean removed;
 	
 	/**
 	 * Calls the super constructor for the basic functionality,
@@ -33,6 +34,7 @@ class LilLexiDoc extends Composition {
 		// cause we only have one column
 		currentFont = "Courier";
 		currentSize = 24;
+		last = null;
 		removed = false;
 	}
 	
@@ -64,8 +66,9 @@ class LilLexiDoc extends Composition {
 		cur.checkMe(spellCheck);
 		cur.changeFont(currentFont);
 		cur.changeSize(currentSize);
-		cursor++; // move the cursor forward
+		last = cur;
 		removed = false;
+		cursor++; // move the cursor forward
 		// now we update the canvas to reflect the addition
 		comp = compositor.compose(glyphs);
 		ui.updateUI();
@@ -126,9 +129,10 @@ class LilLexiDoc extends Composition {
 	 */
 	public void add(int rectSize) {
 		Glyph rect = new GRectangle(cursor * 25, cursor * 40, rectSize, rectSize);
+		last = rect;
+		removed = false;
 		glyphs.add(cursor, rect); // add it to the glyphs
 		cursor++; // move the cursor forward
-		removed = false;
 		// now we update the canvas to reflect the addition
 		comp = compositor.compose(glyphs);
 		ui.updateUI();
@@ -147,6 +151,7 @@ class LilLexiDoc extends Composition {
 	private void add(Glyph g) {
 		glyphs.add(cursor, g);
 		cursor++;
+		removed = false;
 		comp = compositor.compose(glyphs);
 		ui.updateUI();
 	}
@@ -162,6 +167,8 @@ class LilLexiDoc extends Composition {
 	 */
 	public void add(Display display) {
 		Glyph img = new GImage(cursor * 25, cursor * 40, display);
+		last = img;
+		removed = false;
 		glyphs.add(cursor, img); // add it to the glyphs
 		cursor++; // move cursor forward
 		// now we update the canvas to reflect the addition
@@ -183,8 +190,8 @@ class LilLexiDoc extends Composition {
 			// removes what came before cursor
 			last = glyphs.get(cursor - 1);
 			glyphs.remove(cursor-1);
-			cursor--; // move cursor back since a glyph was removed
 			removed = true;
+			cursor--; // move cursor back since a glyph was removed
 			comp = compositor.compose(glyphs);
 			ui.updateUI();
 		}
@@ -208,7 +215,7 @@ class LilLexiDoc extends Composition {
 	 * re-adds the last glyph to the screen.
 	 */
 	public void redo() {
-		if (glyphs.size() != 1 && removed) {
+		if (!removed) {
 			return;
 		}
 		this.add(last);
