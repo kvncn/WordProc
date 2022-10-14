@@ -409,7 +409,7 @@ class GImage extends Glyph {
 	 */
 	@Override
 	public void draw(PaintEvent e) {
-		e.gc.drawImage(img, x, y);
+		e.gc.drawImage(img, x, y * (maxHeight +1));
 	}
 
 	/**
