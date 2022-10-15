@@ -33,6 +33,7 @@ public abstract class Glyph{
 	protected int width;
 	protected int maxHeight;
 	protected Glyph parent;
+	protected int curY;
 	/**
 	 * When created given x, y coordinate on
 	 * the window. From rect/image x,y will
@@ -46,6 +47,11 @@ public abstract class Glyph{
 		this.y = y;
 		maxHeight = 1;
 		width = 0;
+		curY = 0;
+	}
+	
+	public void setCurY(int y) {
+		curY = y;
 	}
 	
 	/**
@@ -249,8 +255,10 @@ class Character extends Glyph{
 		}else {
 			e.gc.setForeground(e.display.getSystemColor(SWT.COLOR_BLUE));
 		}
+
+		//System.out.println("char x,y " + x + " " + curY );
 		e.gc.setFont(newFont);
-		e.gc.drawString(c, x +10, y * (maxHeight+1));	
+		e.gc.drawString(c, x +5, curY);	
 	}	
 	
 	/**
@@ -344,7 +352,7 @@ class GRectangle extends Glyph{
 	 */
 	@Override
 	public void draw(PaintEvent e) {
-		e.gc.drawRectangle(x+5, y*(maxHeight+1), width, height);
+		e.gc.drawRectangle(x+5, curY, width, height);
 	}
 
 	/**
@@ -352,7 +360,7 @@ class GRectangle extends Glyph{
 	 */
 	@Override
 	public Rectangle bounds() {
-		return new Rectangle(x,y, width, height);
+		return new Rectangle(x,y, width+1, height+1);
 	}
 	
 	/**
@@ -409,7 +417,10 @@ class GImage extends Glyph {
 	 */
 	@Override
 	public void draw(PaintEvent e) {
-		e.gc.drawImage(img, x, y * (maxHeight +1));
+		//System.out.println("cur y is " +curY + " y is " +y);
+
+		//System.out.println("image x,y " + x + " " + ((y * height) + curY) );
+		e.gc.drawImage(img, x+5, curY);
 	}
 
 	/**
@@ -467,7 +478,8 @@ class Cursor extends Glyph{
 	 */
 	@Override
 	public void draw(PaintEvent e) {
-		e.gc.drawRectangle(x +5, y * (maxHeight +1), width, height);
+		//System.out.println("cursor x,y " + x + " " + ((y * height) + curY) );
+		e.gc.drawRectangle(x +5, curY, width, height);
 	}
 
 	/**
@@ -516,18 +528,26 @@ class Row extends Glyph{
 	protected int y;
 	protected List<Glyph> children;
 	protected final static int maxWidth = 600; //600 pixels (canvas is 800 by 800 by want to count for bo) 
-
+	protected int curHeight;
 	/**
 	 * 
 	 * @param x coor
 	 * @param y coor
 	 */
-	public Row(int x, int y) {
+	public Row(int x, int y, int prevHeight) {
 		super(x,y);
 		//Glyphs in the row
 		children = new ArrayList<>();
 		width = 0;	// starts at zero, changes when things added/ subtracted
-		height = 40; 
+		height = 40;
+		if( y == 0) {
+			this.curHeight = 0;
+		}else {
+			this.curHeight = prevHeight;
+		}
+		
+		
+		//System.out.println("ROW CUR HEIGHT " + this.curHeight +" prev " + prevHeight + " row height " + height);
 	}
 
 	/**
@@ -561,12 +581,15 @@ class Row extends Glyph{
 	public void insert(Glyph g) {
 		children.add(g);
 		g.setX(width);
-
+		g.setCurY(curHeight);
 		width += g.bounds().width;
 		if(g.bounds().height > maxHeight) {
 			height = g.bounds().height;
+			maxHeight = height;
 			for(Glyph child : children) {
 				child.setMaxHeight(height);
+				
+				
 			}
 		}
 	}
@@ -596,6 +619,8 @@ class Row extends Glyph{
 				max = children.get(i).bounds().height;
 			}
 		}
+		height = max;
+		maxHeight = max;
 		return max;
 	}
 
